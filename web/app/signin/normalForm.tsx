@@ -9,10 +9,11 @@ import MailAndPasswordAuth from './components/mail-and-password-auth'
 import SocialAuth from './components/social-auth'
 import SSOAuth from './components/sso-auth'
 import cn from '@/utils/classnames'
-import { getSystemFeatures, invitationCheck } from '@/service/common'
-import { LicenseStatus, defaultSystemFeatures } from '@/types/feature'
+import { invitationCheck } from '@/service/common'
+import { LicenseStatus } from '@/types/feature'
 import Toast from '@/app/components/base/toast'
 import { IS_CE_EDITION } from '@/config'
+import { useGlobalPublicStore } from '@/context/global-public-context'
 
 const NormalForm = () => {
   const { t } = useTranslation()
@@ -23,7 +24,7 @@ const NormalForm = () => {
   const message = decodeURIComponent(searchParams.get('message') || '')
   const invite_token = decodeURIComponent(searchParams.get('invite_token') || '')
   const [isLoading, setIsLoading] = useState(true)
-  const [systemFeatures, setSystemFeatures] = useState(defaultSystemFeatures)
+  const { systemFeatures } = useGlobalPublicStore()
   const [authType, updateAuthType] = useState<'code' | 'password'>('password')
   const [showORLine, setShowORLine] = useState(false)
   const [allMethodsAreDisabled, setAllMethodsAreDisabled] = useState(false)
@@ -46,12 +47,9 @@ const NormalForm = () => {
           message,
         })
       }
-      const features = await getSystemFeatures()
-      const allFeatures = { ...defaultSystemFeatures, ...features }
-      setSystemFeatures(allFeatures)
-      setAllMethodsAreDisabled(!allFeatures.enable_social_oauth_login && !allFeatures.enable_email_code_login && !allFeatures.enable_email_password_login && !allFeatures.sso_enforced_for_signin)
-      setShowORLine((allFeatures.enable_social_oauth_login || allFeatures.sso_enforced_for_signin) && (allFeatures.enable_email_code_login || allFeatures.enable_email_password_login))
-      updateAuthType(allFeatures.enable_email_password_login ? 'password' : 'code')
+      setAllMethodsAreDisabled(!systemFeatures.enable_social_oauth_login && !systemFeatures.enable_email_code_login && !systemFeatures.enable_email_password_login && !systemFeatures.sso_enforced_for_signin)
+      setShowORLine((systemFeatures.enable_social_oauth_login || systemFeatures.sso_enforced_for_signin) && (systemFeatures.enable_email_code_login || systemFeatures.enable_email_password_login))
+      updateAuthType(systemFeatures.enable_email_password_login ? 'password' : 'code')
       if (isInviteLink) {
         const checkRes = await invitationCheck({
           url: '/activate/check',
@@ -65,17 +63,16 @@ const NormalForm = () => {
     catch (error) {
       console.error(error)
       setAllMethodsAreDisabled(true)
-      setSystemFeatures(defaultSystemFeatures)
     }
     finally { setIsLoading(false) }
-  }, [consoleToken, refreshToken, message, router, invite_token, isInviteLink])
+  }, [consoleToken, refreshToken, message, router, invite_token, isInviteLink, systemFeatures])
   useEffect(() => {
     init()
   }, [init])
   if (isLoading || consoleToken) {
     return <div className={
       cn(
-        'flex flex-col items-center w-full grow justify-center',
+        'flex w-full grow flex-col items-center justify-center',
         'px-6',
         'md:px-[108px]',
       )
@@ -84,43 +81,43 @@ const NormalForm = () => {
     </div>
   }
   if (systemFeatures.license?.status === LicenseStatus.LOST) {
-    return <div className='w-full mx-auto mt-8'>
-      <div className='bg-white'>
-        <div className="p-4 rounded-lg bg-gradient-to-r from-workflow-workflow-progress-bg-1 to-workflow-workflow-progress-bg-2">
-          <div className='flex items-center justify-center w-10 h-10 rounded-xl bg-components-card-bg shadow shadows-shadow-lg mb-2 relative'>
-            <RiContractLine className='w-5 h-5' />
-            <RiErrorWarningFill className='absolute w-4 h-4 text-text-warning-secondary -top-1 -right-1' />
+    return <div className='mx-auto mt-8 w-full'>
+      <div className='relative'>
+        <div className="rounded-lg bg-gradient-to-r from-workflow-workflow-progress-bg-1 to-workflow-workflow-progress-bg-2 p-4">
+          <div className='shadows-shadow-lg relative mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-components-card-bg shadow'>
+            <RiContractLine className='h-5 w-5' />
+            <RiErrorWarningFill className='absolute -right-1 -top-1 h-4 w-4 text-text-warning-secondary' />
           </div>
           <p className='system-sm-medium text-text-primary'>{t('login.licenseLost')}</p>
-          <p className='system-xs-regular text-text-tertiary mt-1'>{t('login.licenseLostTip')}</p>
+          <p className='system-xs-regular mt-1 text-text-tertiary'>{t('login.licenseLostTip')}</p>
         </div>
       </div>
     </div>
   }
   if (systemFeatures.license?.status === LicenseStatus.EXPIRED) {
-    return <div className='w-full mx-auto mt-8'>
-      <div className='bg-white'>
-        <div className="p-4 rounded-lg bg-gradient-to-r from-workflow-workflow-progress-bg-1 to-workflow-workflow-progress-bg-2">
-          <div className='flex items-center justify-center w-10 h-10 rounded-xl bg-components-card-bg shadow shadows-shadow-lg mb-2 relative'>
-            <RiContractLine className='w-5 h-5' />
-            <RiErrorWarningFill className='absolute w-4 h-4 text-text-warning-secondary -top-1 -right-1' />
+    return <div className='mx-auto mt-8 w-full'>
+      <div className='relative'>
+        <div className="rounded-lg bg-gradient-to-r from-workflow-workflow-progress-bg-1 to-workflow-workflow-progress-bg-2 p-4">
+          <div className='shadows-shadow-lg relative mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-components-card-bg shadow'>
+            <RiContractLine className='h-5 w-5' />
+            <RiErrorWarningFill className='absolute -right-1 -top-1 h-4 w-4 text-text-warning-secondary' />
           </div>
           <p className='system-sm-medium text-text-primary'>{t('login.licenseExpired')}</p>
-          <p className='system-xs-regular text-text-tertiary mt-1'>{t('login.licenseExpiredTip')}</p>
+          <p className='system-xs-regular mt-1 text-text-tertiary'>{t('login.licenseExpiredTip')}</p>
         </div>
       </div>
     </div>
   }
   if (systemFeatures.license?.status === LicenseStatus.INACTIVE) {
-    return <div className='w-full mx-auto mt-8'>
-      <div className='bg-white'>
-        <div className="p-4 rounded-lg bg-gradient-to-r from-workflow-workflow-progress-bg-1 to-workflow-workflow-progress-bg-2">
-          <div className='flex items-center justify-center w-10 h-10 rounded-xl bg-components-card-bg shadow shadows-shadow-lg mb-2 relative'>
-            <RiContractLine className='w-5 h-5' />
-            <RiErrorWarningFill className='absolute w-4 h-4 text-text-warning-secondary -top-1 -right-1' />
+    return <div className='mx-auto mt-8 w-full'>
+      <div className='relative'>
+        <div className="rounded-lg bg-gradient-to-r from-workflow-workflow-progress-bg-1 to-workflow-workflow-progress-bg-2 p-4">
+          <div className='shadows-shadow-lg relative mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-components-card-bg shadow'>
+            <RiContractLine className='h-5 w-5' />
+            <RiErrorWarningFill className='absolute -right-1 -top-1 h-4 w-4 text-text-warning-secondary' />
           </div>
           <p className='system-sm-medium text-text-primary'>{t('login.licenseInactive')}</p>
-          <p className='system-xs-regular text-text-tertiary mt-1'>{t('login.licenseInactiveTip')}</p>
+          <p className='system-xs-regular mt-1 text-text-tertiary'>{t('login.licenseInactiveTip')}</p>
         </div>
       </div>
     </div>
@@ -128,18 +125,18 @@ const NormalForm = () => {
 
   return (
     <>
-      <div className="w-full mx-auto mt-8">
+      <div className="mx-auto mt-8 w-full">
         {isInviteLink
-          ? <div className="w-full mx-auto">
+          ? <div className="mx-auto w-full">
             <h2 className="title-4xl-semi-bold text-text-primary">{t('login.join')}{workspaceName}</h2>
-            <p className='mt-2 body-md-regular text-text-tertiary'>{t('login.joinTipStart')}{workspaceName}{t('login.joinTipEnd')}</p>
+            {!systemFeatures.branding.enabled && <p className='body-md-regular mt-2 text-text-tertiary'>{t('login.joinTipStart')}{workspaceName}{t('login.joinTipEnd')}</p>}
           </div>
-          : <div className="w-full mx-auto">
+          : <div className="mx-auto w-full">
             <h2 className="title-4xl-semi-bold text-text-primary">{t('login.pageTitle')}</h2>
-            <p className='mt-2 body-md-regular text-text-tertiary'>{t('login.welcome')}</p>
+            {!systemFeatures.branding.enabled && <p className='body-md-regular mt-2 text-text-tertiary'>{t('login.welcome')}</p>}
           </div>}
-        <div className="bg-white">
-          <div className="flex flex-col gap-3 mt-6">
+        <div className="relative">
+          <div className="mt-6 flex flex-col gap-3">
             {systemFeatures.enable_social_oauth_login && <SocialAuth />}
             {systemFeatures.sso_enforced_for_signin && <div className='w-full'>
               <SSOAuth protocol={systemFeatures.sso_enforced_for_signin_protocol} />
@@ -148,10 +145,10 @@ const NormalForm = () => {
 
           {showORLine && <div className="relative mt-6">
             <div className="absolute inset-0 flex items-center" aria-hidden="true">
-              <div className='bg-gradient-to-r from-background-gradient-mask-transparent via-divider-regular to-background-gradient-mask-transparent h-px w-full'></div>
+              <div className='h-px w-full bg-gradient-to-r from-background-gradient-mask-transparent via-divider-regular to-background-gradient-mask-transparent'></div>
             </div>
             <div className="relative flex justify-center">
-              <span className="px-2 text-text-tertiary system-xs-medium-uppercase bg-white">{t('login.or')}</span>
+              <span className="system-xs-medium-uppercase px-2 text-text-tertiary">{t('login.or')}</span>
             </div>
           </div>}
           {
@@ -171,42 +168,44 @@ const NormalForm = () => {
             </>
           }
           {allMethodsAreDisabled && <>
-            <div className="p-4 rounded-lg bg-gradient-to-r from-workflow-workflow-progress-bg-1 to-workflow-workflow-progress-bg-2">
-              <div className='flex items-center justify-center w-10 h-10 rounded-xl bg-components-card-bg shadow shadows-shadow-lg mb-2'>
-                <RiDoorLockLine className='w-5 h-5' />
+            <div className="rounded-lg bg-gradient-to-r from-workflow-workflow-progress-bg-1 to-workflow-workflow-progress-bg-2 p-4">
+              <div className='shadows-shadow-lg mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-components-card-bg shadow'>
+                <RiDoorLockLine className='h-5 w-5' />
               </div>
               <p className='system-sm-medium text-text-primary'>{t('login.noLoginMethod')}</p>
-              <p className='system-xs-regular text-text-tertiary mt-1'>{t('login.noLoginMethodTip')}</p>
+              <p className='system-xs-regular mt-1 text-text-tertiary'>{t('login.noLoginMethodTip')}</p>
             </div>
             <div className="relative my-2 py-2">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className='bg-gradient-to-r from-background-gradient-mask-transparent via-divider-regular to-background-gradient-mask-transparent h-px w-full'></div>
+                <div className='h-px w-full bg-gradient-to-r from-background-gradient-mask-transparent via-divider-regular to-background-gradient-mask-transparent'></div>
               </div>
             </div>
           </>}
-          <div className="w-full block mt-2 system-xs-regular text-text-tertiary">
-            {t('login.tosDesc')}
-            &nbsp;
-            <Link
-              className='system-xs-medium text-text-secondary hover:underline'
-              target='_blank' rel='noopener noreferrer'
-              href='https://dify.ai/terms'
-            >{t('login.tos')}</Link>
-            &nbsp;&&nbsp;
-            <Link
-              className='system-xs-medium text-text-secondary hover:underline'
-              target='_blank' rel='noopener noreferrer'
-              href='https://dify.ai/privacy'
-            >{t('login.pp')}</Link>
-          </div>
-          {IS_CE_EDITION && <div className="w-hull block mt-2 system-xs-regular text-text-tertiary">
-            {t('login.goToInit')}
-            &nbsp;
-            <Link
-              className='system-xs-medium text-text-secondary hover:underline'
-              href='/install'
-            >{t('login.setAdminAccount')}</Link>
-          </div>}
+          {!systemFeatures.branding.enabled && <>
+            <div className="system-xs-regular mt-2 block w-full text-text-tertiary">
+              {t('login.tosDesc')}
+              &nbsp;
+              <Link
+                className='system-xs-medium text-text-secondary hover:underline'
+                target='_blank' rel='noopener noreferrer'
+                href='https://dify.ai/terms'
+              >{t('login.tos')}</Link>
+              &nbsp;&&nbsp;
+              <Link
+                className='system-xs-medium text-text-secondary hover:underline'
+                target='_blank' rel='noopener noreferrer'
+                href='https://dify.ai/privacy'
+              >{t('login.pp')}</Link>
+            </div>
+            {IS_CE_EDITION && <div className="w-hull system-xs-regular mt-2 block text-text-tertiary">
+              {t('login.goToInit')}
+              &nbsp;
+              <Link
+                className='system-xs-medium text-text-secondary hover:underline'
+                href='/install'
+              >{t('login.setAdminAccount')}</Link>
+            </div>}
+          </>}
 
         </div>
       </div>

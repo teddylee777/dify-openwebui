@@ -1,33 +1,21 @@
+from collections.abc import Sequence
 from decimal import Decimal
-from enum import Enum
+from enum import StrEnum
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from core.model_runtime.entities.message_entities import AssistantPromptMessage, PromptMessage
 from core.model_runtime.entities.model_entities import ModelUsage, PriceInfo
 
 
-class LLMMode(Enum):
+class LLMMode(StrEnum):
     """
     Enum class for large language model mode.
     """
 
     COMPLETION = "completion"
     CHAT = "chat"
-
-    @classmethod
-    def value_of(cls, value: str) -> "LLMMode":
-        """
-        Get value of given mode.
-
-        :param value: mode value
-        :return: mode
-        """
-        for mode in cls:
-            if mode.value == value:
-                return mode
-        raise ValueError(f"invalid mode value {value}")
 
 
 class LLMUsage(ModelUsage):
@@ -107,7 +95,7 @@ class LLMResult(BaseModel):
 
     id: Optional[str] = None
     model: str
-    prompt_messages: list[PromptMessage]
+    prompt_messages: Sequence[PromptMessage] = Field(default_factory=list)
     message: AssistantPromptMessage
     usage: LLMUsage
     system_fingerprint: Optional[str] = None
@@ -130,7 +118,7 @@ class LLMResultChunk(BaseModel):
     """
 
     model: str
-    prompt_messages: list[PromptMessage]
+    prompt_messages: Sequence[PromptMessage] = Field(default_factory=list)
     system_fingerprint: Optional[str] = None
     delta: LLMResultChunkDelta
 

@@ -50,6 +50,14 @@ const translation = {
     submit: '전송',
     skip: '배',
     imageCopied: '복사된 이미지',
+    deleteApp: '앱 삭제',
+    copied: '복사',
+    viewDetails: '세부 정보보기',
+    in: '안으로',
+    downloadFailed: '다운로드 실패했습니다. 나중에 다시 시도하십시오.',
+    format: '형식',
+    more: '더 많은',
+    downloadSuccess: '다운로드 완료.',
   },
   placeholder: {
     input: '입력해주세요',
@@ -118,6 +126,8 @@ const translation = {
       Custom: '사용자 정의',
     },
     addMoreModel: '설정에서 다른 모델을 추가하세요',
+    capabilities: '멀티모달 기능',
+    settingsLink: '모델 공급자 설정',
   },
   menus: {
     status: '베타 버전',
@@ -130,6 +140,9 @@ const translation = {
     newApp: '새로운 앱',
     newDataset: '지식 만들기',
     tools: '도구',
+    exploreMarketplace: 'Marketplace 둘러보기',
+    appDetail: '앱 세부정보',
+    account: '계정',
   },
   userProfile: {
     settings: '설정',
@@ -142,6 +155,9 @@ const translation = {
     community: '커뮤니티',
     about: 'Dify 소개',
     logout: '로그아웃',
+    github: '깃허브',
+    compliance: '컴플라이언스',
+    support: '지원',
   },
   settings: {
     accountGroup: '계정',
@@ -155,6 +171,7 @@ const translation = {
     dataSource: '데이터 소스',
     plugin: '플러그인',
     apiBasedExtension: 'API 확장',
+    generalGroup: '일반',
   },
   account: {
     avatar: '아바타',
@@ -190,6 +207,9 @@ const translation = {
     feedbackLabel: '계정을 삭제한 이유를 알려주시겠습니까?',
     feedbackPlaceholder: '선택적',
     deletePrivacyLinkTip: '당사가 귀하의 데이터를 처리하는 방법에 대한 자세한 내용은 다음을 참조하십시오.',
+    workspaceIcon: '작업 공간 아이콘',
+    editWorkspaceInfo: '작업 공간 정보 편집',
+    workspaceName: '작업 공간 이름',
   },
   members: {
     team: '팀',
@@ -282,6 +302,7 @@ const translation = {
       usedUp: '트라이얼 할당량이 다 사용되었습니다. 다른 모델 제공자를 추가하세요.',
       useYourModel: '현재 사용자 정의 모델 제공자를 사용 중입니다.',
       close: '닫기',
+      trialQuotaTip: 'Anthropic 평가판 할당량은 2025/03/11에 만료되며 그 이후에는 더 이상 사용할 수 없습니다. 제때 활용하시기 바랍니다.',
     },
     anthropic: {
       using: '임베드 기능을 사용 중입니다',
@@ -393,6 +414,12 @@ const translation = {
     loadBalancingInfo: '기본적으로 부하 분산은 라운드 로빈 전략을 사용합니다. 속도 제한이 트리거되면 1분의 휴지 기간이 적용됩니다.',
     loadBalancingLeastKeyWarning: '로드 밸런싱을 사용하려면 최소 2개의 키를 사용하도록 설정해야 합니다.',
     providerManagedDescription: '모델 공급자가 제공하는 단일 자격 증명 집합을 사용합니다.',
+    installProvider: '모델 공급자 설치',
+    discoverMore: '더 알아보기',
+    emptyProviderTitle: '모델 공급자가 설정되지 않음',
+    configureTip: 'api-key 설정 또는 사용할 모델 추가',
+    emptyProviderTip: '먼저 모델 공급자를 설치하십시오.',
+    toBeConfigured: '구성 예정',
   },
   dataSource: {
     add: '데이터 소스 추가하기',
@@ -436,7 +463,7 @@ const translation = {
   apiBasedExtension: {
     title: 'API 기반 확장은 Dify 애플리케이션 전체에서 간편한 사용을 위한 설정을 단순화하고 집중적인 API 관리를 제공합니다.',
     link: '사용자 정의 API 기반 확장을 개발하는 방법 배우기',
-    linkUrl: 'https://docs.dify.ai/features/extension/api_based_extension',
+    linkUrl: 'https://docs.dify.ai/en/guides/extension/api-based-extension/README',
     add: 'API 기반 확장 추가',
     selector: {
       title: 'API 기반 확장',
@@ -522,6 +549,9 @@ const translation = {
       hitScore: '검색 점수:',
     },
     inputPlaceholder: '봇과 대화',
+    thought: '생각',
+    thinking: '생각...',
+    resend: '재전송',
   },
   promptEditor: {
     placeholder: '여기에 프롬프트 단어를 입력하세요. 변수를 삽입하려면 "{{"를 입력하고, 프롬프트 컨텐츠 블록을 삽입하려면 "/"를 입력하세요.',
@@ -612,10 +642,31 @@ const translation = {
   license: {
     expiring_plural: '{{count}}일 후에 만료',
     expiring: '하루 후에 만료',
+    unlimited: '무제한',
   },
   pagination: {
     perPage: '페이지당 항목 수',
   },
+  theme: {
+    theme: '테마',
+    light: '밝은',
+    dark: '어두운',
+    auto: '시스템',
+  },
+  compliance: {
+    iso27001: 'ISO 27001:2022 인증',
+    soc2Type1: 'SOC 2 유형 I 보고서',
+    soc2Type2: 'SOC 2 유형 II 보고서',
+    gdpr: 'GDPR DPA',
+    professionalUpgradeTooltip: '팀 플랜 이상에서만 사용할 수 있습니다.',
+    sandboxUpgradeTooltip: '전문가 또는 팀 플랜에서만 사용할 수 있습니다.',
+  },
+  imageInput: {
+    supportedFormats: 'PNG, JPG, JPEG, WEBP 및 GIF를 지원합니다.',
+    browse: '브라우즈',
+    dropImageHere: '여기에 이미지를 드롭하거나',
+  },
+  you: '너',
 }
 
 export default translation

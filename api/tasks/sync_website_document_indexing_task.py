@@ -46,7 +46,7 @@ def sync_website_document_indexing_task(dataset_id: str, document_id: str):
         if document:
             document.indexing_status = "error"
             document.error = str(e)
-            document.stopped_at = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+            document.stopped_at = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
             db.session.add(document)
             db.session.commit()
         redis_client.delete(sync_indexing_cache_key)
@@ -72,7 +72,7 @@ def sync_website_document_indexing_task(dataset_id: str, document_id: str):
         db.session.commit()
 
         document.indexing_status = "parsing"
-        document.processing_started_at = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+        document.processing_started_at = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
         db.session.add(document)
         db.session.commit()
 
@@ -82,11 +82,11 @@ def sync_website_document_indexing_task(dataset_id: str, document_id: str):
     except Exception as ex:
         document.indexing_status = "error"
         document.error = str(ex)
-        document.stopped_at = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+        document.stopped_at = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
         db.session.add(document)
         db.session.commit()
         logging.info(click.style(str(ex), fg="yellow"))
         redis_client.delete(sync_indexing_cache_key)
-        pass
+        logging.exception("sync_website_document_indexing_task failed, document_id: {}".format(document_id))
     end_at = time.perf_counter()
     logging.info(click.style("Sync document: {} latency: {}".format(document_id, end_at - start_at), fg="green"))

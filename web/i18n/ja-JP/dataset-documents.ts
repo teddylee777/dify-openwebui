@@ -1,7 +1,7 @@
 const translation = {
   list: {
     title: 'ドキュメント',
-    desc: 'ナレッジのすべてのファイルがここに表示され、ナレッジ全体がDifyの引用やチャットプラグインを介してリンクされるか、インデックス化されることができます。',
+    desc: 'すべてのファイルがここに表示され、ナレッジベース全体がDifyの引用やチャットプラグインを介してリンクされるか、インデックス化されることができます。',
     learnMore: '詳細はこちら',
     addFile: 'ファイルを追加',
     addPages: 'ページを追加',
@@ -51,7 +51,7 @@ const translation = {
     empty: {
       title: 'まだドキュメントがありません',
       upload: {
-        tip: 'ファイルをアップロードしたり、ウェブサイトから同期したり、NotionやGitHubなどのウェブアプリから同期することができます。',
+        tip: 'ファイルをアップロードしたり、ウェブサイトから同期したり、NotionやGitHubなどのWebアプリから同期することができます。',
       },
       sync: {
         tip: 'Difyは定期的にNotionからファイルをダウンロードし、処理を完了します。',
@@ -133,7 +133,7 @@ const translation = {
         language: '言語',
         authorPublisher: '著者/出版社',
         publishDate: '公開日',
-        topicsKeywords: 'トピック/キーワード',
+        topicKeywords: 'トピック/キーワード',
         description: '説明',
       },
       paper: {

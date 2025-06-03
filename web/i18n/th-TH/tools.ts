@@ -15,7 +15,6 @@ const translation = {
   },
   author: 'โดย',
   auth: {
-    unauthorized: 'การอนุญาต',
     authorized: 'อนุญาต',
     setup: 'ตั้งค่าการให้สิทธิ์เพื่อใช้',
     setupModalTitle: 'ตั้งค่าการให้สิทธิ์',
@@ -133,6 +132,7 @@ const translation = {
     number: 'เลข',
     required: 'ต้องระบุ',
     infoAndSetting: 'ข้อมูลและการตั้งค่า',
+    file: 'แฟ้ม',
   },
   noCustomTool: {
     title: 'ไม่มีเครื่องมือที่กําหนดเอง!',
@@ -150,6 +150,8 @@ const translation = {
   howToGet: 'วิธีรับ',
   openInStudio: 'เปิดในสตูดิโอ',
   toolNameUsageTip: 'ชื่อการเรียกเครื่องมือสําหรับการใช้เหตุผลและการแจ้งเตือนของตัวแทน',
+  noTools: 'ไม่พบเครื่องมือ',
+  copyToolName: 'คัดลอกชื่อ',
 }
 
 export default translation

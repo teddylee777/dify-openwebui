@@ -6,11 +6,12 @@ from core.helper.code_executor.code_executor import CodeExecutionError, CodeExec
 from core.helper.code_executor.code_node_provider import CodeNodeProvider
 from core.helper.code_executor.javascript.javascript_code_provider import JavascriptCodeProvider
 from core.helper.code_executor.python3.python3_code_provider import Python3CodeProvider
+from core.variables.segments import ArrayFileSegment
 from core.workflow.entities.node_entities import NodeRunResult
+from core.workflow.entities.workflow_node_execution import WorkflowNodeExecutionStatus
 from core.workflow.nodes.base import BaseNode
 from core.workflow.nodes.code.entities import CodeNodeData
 from core.workflow.nodes.enums import NodeType
-from models.workflow import WorkflowNodeExecutionStatus
 
 from .exc import (
     CodeNodeError,
@@ -49,7 +50,10 @@ class CodeNode(BaseNode[CodeNodeData]):
         for variable_selector in self.node_data.variables:
             variable_name = variable_selector.variable
             variable = self.graph_runtime_state.variable_pool.get(variable_selector.value_selector)
-            variables[variable_name] = variable.to_object() if variable else None
+            if isinstance(variable, ArrayFileSegment):
+                variables[variable_name] = [v.to_dict() for v in variable.value] if variable.value else None
+            else:
+                variables[variable_name] = variable.to_object() if variable else None
         # Run code
         try:
             result = CodeExecutor.execute_workflow_code_template(
@@ -123,7 +127,7 @@ class CodeNode(BaseNode[CodeNodeData]):
         depth: int = 1,
     ):
         if depth > dify_config.CODE_MAX_DEPTH:
-            raise DepthLimitError(f"Depth limit ${dify_config.CODE_MAX_DEPTH} reached, object too deep.")
+            raise DepthLimitError(f"Depth limit {dify_config.CODE_MAX_DEPTH} reached, object too deep.")
 
         transformed_result: dict[str, Any] = {}
         if output_schema is None:
@@ -163,8 +167,11 @@ class CodeNode(BaseNode[CodeNodeData]):
                                     value=value,
                                     variable=f"{prefix}.{output_name}[{i}]" if prefix else f"{output_name}[{i}]",
                                 )
-                        elif isinstance(first_element, dict) and all(
-                            value is None or isinstance(value, dict) for value in output_value
+                        elif (
+                            isinstance(first_element, dict)
+                            and all(value is None or isinstance(value, dict) for value in output_value)
+                            or isinstance(first_element, list)
+                            and all(value is None or isinstance(value, list) for value in output_value)
                         ):
                             for i, value in enumerate(output_value):
                                 if value is not None:
@@ -195,7 +202,7 @@ class CodeNode(BaseNode[CodeNodeData]):
             if output_config.type == "object":
                 # check if output is object
                 if not isinstance(result.get(output_name), dict):
-                    if isinstance(result.get(output_name), type(None)):
+                    if result[output_name] is None:
                         transformed_result[output_name] = None
                     else:
                         raise OutputValidationError(
@@ -223,7 +230,7 @@ class CodeNode(BaseNode[CodeNodeData]):
             elif output_config.type == "array[number]":
                 # check if array of number available
                 if not isinstance(result[output_name], list):
-                    if isinstance(result[output_name], type(None)):
+                    if result[output_name] is None:
                         transformed_result[output_name] = None
                     else:
                         raise OutputValidationError(
@@ -244,7 +251,7 @@ class CodeNode(BaseNode[CodeNodeData]):
             elif output_config.type == "array[string]":
                 # check if array of string available
                 if not isinstance(result[output_name], list):
-                    if isinstance(result[output_name], type(None)):
+                    if result[output_name] is None:
                         transformed_result[output_name] = None
                     else:
                         raise OutputValidationError(
@@ -265,7 +272,7 @@ class CodeNode(BaseNode[CodeNodeData]):
             elif output_config.type == "array[object]":
                 # check if array of object available
                 if not isinstance(result[output_name], list):
-                    if isinstance(result[output_name], type(None)):
+                    if result[output_name] is None:
                         transformed_result[output_name] = None
                     else:
                         raise OutputValidationError(

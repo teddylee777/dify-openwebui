@@ -1,11 +1,11 @@
 import json
 
 from flask import request
-from flask_restful import marshal, reqparse  # type: ignore
-from sqlalchemy import desc
+from flask_restful import marshal, reqparse
+from sqlalchemy import desc, select
 from werkzeug.exceptions import NotFound
 
-import services.dataset_service
+import services
 from controllers.common.errors import FilenameNotExistsError
 from controllers.service_api import api
 from controllers.service_api.app.error import (
@@ -18,7 +18,6 @@ from controllers.service_api.app.error import (
 from controllers.service_api.dataset.error import (
     ArchivedDocumentImmutableError,
     DocumentIndexingError,
-    InvalidMetadataError,
 )
 from controllers.service_api.wraps import DatasetApiResource, cloud_edition_billing_resource_check
 from core.errors.error import ProviderTokenNotInitError
@@ -50,9 +49,9 @@ class DocumentAddByTextApi(DatasetApiResource):
         parser.add_argument(
             "indexing_technique", type=str, choices=Dataset.INDEXING_TECHNIQUE_LIST, nullable=False, location="json"
         )
-        parser.add_argument("retrieval_model", type=dict, required=False, nullable=False, location="json")
-        parser.add_argument("doc_type", type=str, required=False, nullable=True, location="json")
-        parser.add_argument("doc_metadata", type=dict, required=False, nullable=True, location="json")
+        parser.add_argument("retrieval_model", type=dict, required=False, nullable=True, location="json")
+        parser.add_argument("embedding_model", type=str, required=False, nullable=True, location="json")
+        parser.add_argument("embedding_model_provider", type=str, required=False, nullable=True, location="json")
 
         args = parser.parse_args()
         dataset_id = str(dataset_id)
@@ -60,32 +59,10 @@ class DocumentAddByTextApi(DatasetApiResource):
         dataset = db.session.query(Dataset).filter(Dataset.tenant_id == tenant_id, Dataset.id == dataset_id).first()
 
         if not dataset:
-            raise ValueError("Dataset is not exist.")
+            raise ValueError("Dataset does not exist.")
 
         if not dataset.indexing_technique and not args["indexing_technique"]:
             raise ValueError("indexing_technique is required.")
-
-        # Validate metadata if provided
-        if args.get("doc_type") or args.get("doc_metadata"):
-            if not args.get("doc_type") or not args.get("doc_metadata"):
-                raise InvalidMetadataError("Both doc_type and doc_metadata must be provided when adding metadata")
-
-            if args["doc_type"] not in DocumentService.DOCUMENT_METADATA_SCHEMA:
-                raise InvalidMetadataError(
-                    "Invalid doc_type. Must be one of: " + ", ".join(DocumentService.DOCUMENT_METADATA_SCHEMA.keys())
-                )
-
-            if not isinstance(args["doc_metadata"], dict):
-                raise InvalidMetadataError("doc_metadata must be a dictionary")
-
-            # Validate metadata schema based on doc_type
-            if args["doc_type"] != "others":
-                metadata_schema = DocumentService.DOCUMENT_METADATA_SCHEMA[args["doc_type"]]
-                for key, value in args["doc_metadata"].items():
-                    if key in metadata_schema and not isinstance(value, metadata_schema[key]):
-                        raise InvalidMetadataError(f"Invalid type for metadata field {key}")
-            # set to MetaDataConfig
-            args["metadata"] = {"doc_type": args["doc_type"], "doc_metadata": args["doc_metadata"]}
 
         text = args.get("text")
         name = args.get("name")
@@ -133,41 +110,16 @@ class DocumentUpdateByTextApi(DatasetApiResource):
             "doc_language", type=str, default="English", required=False, nullable=False, location="json"
         )
         parser.add_argument("retrieval_model", type=dict, required=False, nullable=False, location="json")
-        parser.add_argument("doc_type", type=str, required=False, nullable=True, location="json")
-        parser.add_argument("doc_metadata", type=dict, required=False, nullable=True, location="json")
         args = parser.parse_args()
         dataset_id = str(dataset_id)
         tenant_id = str(tenant_id)
         dataset = db.session.query(Dataset).filter(Dataset.tenant_id == tenant_id, Dataset.id == dataset_id).first()
 
         if not dataset:
-            raise ValueError("Dataset is not exist.")
+            raise ValueError("Dataset does not exist.")
 
         # indexing_technique is already set in dataset since this is an update
         args["indexing_technique"] = dataset.indexing_technique
-
-        # Validate metadata if provided
-        if args.get("doc_type") or args.get("doc_metadata"):
-            if not args.get("doc_type") or not args.get("doc_metadata"):
-                raise InvalidMetadataError("Both doc_type and doc_metadata must be provided when adding metadata")
-
-            if args["doc_type"] not in DocumentService.DOCUMENT_METADATA_SCHEMA:
-                raise InvalidMetadataError(
-                    "Invalid doc_type. Must be one of: " + ", ".join(DocumentService.DOCUMENT_METADATA_SCHEMA.keys())
-                )
-
-            if not isinstance(args["doc_metadata"], dict):
-                raise InvalidMetadataError("doc_metadata must be a dictionary")
-
-            # Validate metadata schema based on doc_type
-            if args["doc_type"] != "others":
-                metadata_schema = DocumentService.DOCUMENT_METADATA_SCHEMA[args["doc_type"]]
-                for key, value in args["doc_metadata"].items():
-                    if key in metadata_schema and not isinstance(value, metadata_schema[key]):
-                        raise InvalidMetadataError(f"Invalid type for metadata field {key}")
-
-            # set to MetaDataConfig
-            args["metadata"] = {"doc_type": args["doc_type"], "doc_metadata": args["doc_metadata"]}
 
         if args["text"]:
             text = args.get("text")
@@ -216,36 +168,13 @@ class DocumentAddByFileApi(DatasetApiResource):
         if "doc_language" not in args:
             args["doc_language"] = "English"
 
-        # Validate metadata if provided
-        if args.get("doc_type") or args.get("doc_metadata"):
-            if not args.get("doc_type") or not args.get("doc_metadata"):
-                raise InvalidMetadataError("Both doc_type and doc_metadata must be provided when adding metadata")
-
-            if args["doc_type"] not in DocumentService.DOCUMENT_METADATA_SCHEMA:
-                raise InvalidMetadataError(
-                    "Invalid doc_type. Must be one of: " + ", ".join(DocumentService.DOCUMENT_METADATA_SCHEMA.keys())
-                )
-
-            if not isinstance(args["doc_metadata"], dict):
-                raise InvalidMetadataError("doc_metadata must be a dictionary")
-
-            # Validate metadata schema based on doc_type
-            if args["doc_type"] != "others":
-                metadata_schema = DocumentService.DOCUMENT_METADATA_SCHEMA[args["doc_type"]]
-                for key, value in args["doc_metadata"].items():
-                    if key in metadata_schema and not isinstance(value, metadata_schema[key]):
-                        raise InvalidMetadataError(f"Invalid type for metadata field {key}")
-
-            # set to MetaDataConfig
-            args["metadata"] = {"doc_type": args["doc_type"], "doc_metadata": args["doc_metadata"]}
-
         # get dataset info
         dataset_id = str(dataset_id)
         tenant_id = str(tenant_id)
         dataset = db.session.query(Dataset).filter(Dataset.tenant_id == tenant_id, Dataset.id == dataset_id).first()
 
         if not dataset:
-            raise ValueError("Dataset is not exist.")
+            raise ValueError("Dataset does not exist.")
         if not dataset.indexing_technique and not args.get("indexing_technique"):
             raise ValueError("indexing_technique is required.")
 
@@ -306,36 +235,17 @@ class DocumentUpdateByFileApi(DatasetApiResource):
         if "doc_language" not in args:
             args["doc_language"] = "English"
 
-        # Validate metadata if provided
-        if args.get("doc_type") or args.get("doc_metadata"):
-            if not args.get("doc_type") or not args.get("doc_metadata"):
-                raise InvalidMetadataError("Both doc_type and doc_metadata must be provided when adding metadata")
-
-            if args["doc_type"] not in DocumentService.DOCUMENT_METADATA_SCHEMA:
-                raise InvalidMetadataError(
-                    "Invalid doc_type. Must be one of: " + ", ".join(DocumentService.DOCUMENT_METADATA_SCHEMA.keys())
-                )
-
-            if not isinstance(args["doc_metadata"], dict):
-                raise InvalidMetadataError("doc_metadata must be a dictionary")
-
-            # Validate metadata schema based on doc_type
-            if args["doc_type"] != "others":
-                metadata_schema = DocumentService.DOCUMENT_METADATA_SCHEMA[args["doc_type"]]
-                for key, value in args["doc_metadata"].items():
-                    if key in metadata_schema and not isinstance(value, metadata_schema[key]):
-                        raise InvalidMetadataError(f"Invalid type for metadata field {key}")
-
-            # set to MetaDataConfig
-            args["metadata"] = {"doc_type": args["doc_type"], "doc_metadata": args["doc_metadata"]}
-
         # get dataset info
         dataset_id = str(dataset_id)
         tenant_id = str(tenant_id)
         dataset = db.session.query(Dataset).filter(Dataset.tenant_id == tenant_id, Dataset.id == dataset_id).first()
 
         if not dataset:
-            raise ValueError("Dataset is not exist.")
+            raise ValueError("Dataset does not exist.")
+
+        # indexing_technique is already set in dataset since this is an update
+        args["indexing_technique"] = dataset.indexing_technique
+
         if "file" in request.files:
             # save file info
             file = request.files["file"]
@@ -395,7 +305,7 @@ class DocumentDeleteApi(DatasetApiResource):
         dataset = db.session.query(Dataset).filter(Dataset.tenant_id == tenant_id, Dataset.id == dataset_id).first()
 
         if not dataset:
-            raise ValueError("Dataset is not exist.")
+            raise ValueError("Dataset does not exist.")
 
         document = DocumentService.get_document(dataset.id, document_id)
 
@@ -413,7 +323,7 @@ class DocumentDeleteApi(DatasetApiResource):
         except services.errors.document.DocumentIndexingError:
             raise DocumentIndexingError("Cannot delete document during indexing.")
 
-        return {"result": "success"}, 200
+        return 204
 
 
 class DocumentListApi(DatasetApiResource):
@@ -427,15 +337,15 @@ class DocumentListApi(DatasetApiResource):
         if not dataset:
             raise NotFound("Dataset not found.")
 
-        query = Document.query.filter_by(dataset_id=str(dataset_id), tenant_id=tenant_id)
+        query = select(Document).filter_by(dataset_id=str(dataset_id), tenant_id=tenant_id)
 
         if search:
             search = f"%{search}%"
             query = query.filter(Document.name.like(search))
 
-        query = query.order_by(desc(Document.created_at))
+        query = query.order_by(desc(Document.created_at), desc(Document.position))
 
-        paginated_documents = query.paginate(page=page, per_page=limit, max_per_page=100, error_out=False)
+        paginated_documents = db.paginate(select=query, page=page, per_page=limit, max_per_page=100, error_out=False)
         documents = paginated_documents.items
 
         response = {
@@ -464,19 +374,36 @@ class DocumentIndexingStatusApi(DatasetApiResource):
             raise NotFound("Documents not found.")
         documents_status = []
         for document in documents:
-            completed_segments = DocumentSegment.query.filter(
-                DocumentSegment.completed_at.isnot(None),
-                DocumentSegment.document_id == str(document.id),
-                DocumentSegment.status != "re_segment",
-            ).count()
-            total_segments = DocumentSegment.query.filter(
-                DocumentSegment.document_id == str(document.id), DocumentSegment.status != "re_segment"
-            ).count()
-            document.completed_segments = completed_segments
-            document.total_segments = total_segments
-            if document.is_paused:
-                document.indexing_status = "paused"
-            documents_status.append(marshal(document, document_status_fields))
+            completed_segments = (
+                db.session.query(DocumentSegment)
+                .filter(
+                    DocumentSegment.completed_at.isnot(None),
+                    DocumentSegment.document_id == str(document.id),
+                    DocumentSegment.status != "re_segment",
+                )
+                .count()
+            )
+            total_segments = (
+                db.session.query(DocumentSegment)
+                .filter(DocumentSegment.document_id == str(document.id), DocumentSegment.status != "re_segment")
+                .count()
+            )
+            # Create a dictionary with document attributes and additional fields
+            document_dict = {
+                "id": document.id,
+                "indexing_status": "paused" if document.is_paused else document.indexing_status,
+                "processing_started_at": document.processing_started_at,
+                "parsing_completed_at": document.parsing_completed_at,
+                "cleaning_completed_at": document.cleaning_completed_at,
+                "splitting_completed_at": document.splitting_completed_at,
+                "completed_at": document.completed_at,
+                "paused_at": document.paused_at,
+                "error": document.error,
+                "stopped_at": document.stopped_at,
+                "completed_segments": completed_segments,
+                "total_segments": total_segments,
+            }
+            documents_status.append(marshal(document_dict, document_status_fields))
         data = {"data": documents_status}
         return data
 

@@ -206,6 +206,7 @@ const vars = {
   'components-badge-bg-red-soft': 'var(--color-components-badge-bg-red-soft)',
   'components-badge-bg-blue-light-soft': 'var(--color-components-badge-bg-blue-light-soft)',
   'components-badge-bg-gray-soft': 'var(--color-components-badge-bg-gray-soft)',
+  'components-badge-bg-dimm': 'var(--color-components-badge-bg-dimm)',
 
   'components-chart-line': 'var(--color-components-chart-line)',
   'components-chart-area-1': 'var(--color-components-chart-area-1)',
@@ -385,6 +386,7 @@ const vars = {
   'background-gradient-bg-fill-chat-bg-2': 'var(--color-background-gradient-bg-fill-chat-bg-2)',
   'background-gradient-bg-fill-chat-bubble-bg-1': 'var(--color-background-gradient-bg-fill-chat-bubble-bg-1)',
   'background-gradient-bg-fill-chat-bubble-bg-2': 'var(--color-background-gradient-bg-fill-chat-bubble-bg-2)',
+  'background-gradient-bg-fill-chat-bubble-bg-3': 'var(--color-background-gradient-bg-fill-chat-bubble-bg-3)',
   'background-gradient-bg-fill-debug-bg-1': 'var(--color-background-gradient-bg-fill-debug-bg-1)',
   'background-gradient-bg-fill-debug-bg-2': 'var(--color-background-gradient-bg-fill-debug-bg-2)',
 
@@ -399,7 +401,6 @@ const vars = {
   'background-default-burn': 'var(--color-background-default-burn)',
   'background-overlay-fullscreen': 'var(--color-background-overlay-fullscreen)',
   'background-default-lighter': 'var(--color-background-default-lighter)',
-  'background-account-teams-bg': 'var(--color-account-teams-bg)',
   'background-section': 'var(--color-background-section)',
   'background-interaction-from-bg-1': 'var(--color-background-interaction-from-bg-1)',
   'background-interaction-from-bg-2': 'var(--color-background-interaction-from-bg-2)',
@@ -503,6 +504,7 @@ const vars = {
   'state-base-hover-alt': 'var(--color-state-base-hover-alt)',
   'state-base-handle': 'var(--color-state-base-handle)',
   'state-base-handle-hover': 'var(--color-state-base-handle-hover)',
+  'state-base-hover-subtle': 'var(--color-state-base-hover-subtle)',
 
   'state-accent-hover': 'var(--color-state-accent-hover)',
   'state-accent-active': 'var(--color-state-accent-active)',

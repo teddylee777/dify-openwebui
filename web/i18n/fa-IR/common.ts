@@ -50,6 +50,14 @@ const translation = {
     submit: 'ارسال',
     skip: 'کشتی',
     imageCopied: 'تصویر کپی شده',
+    deleteApp: 'حذف برنامه',
+    copied: 'کپی',
+    viewDetails: 'دیدن جزئیات',
+    in: 'در',
+    downloadFailed: 'دانلود ناموفق بود. لطفاً بعداً دوباره تلاش کنید.',
+    more: 'بیشتر',
+    format: 'قالب',
+    downloadSuccess: 'دانلود کامل شد.',
   },
   errorMsg: {
     fieldRequired: '{{field}} الزامی است',
@@ -126,6 +134,8 @@ const translation = {
       Custom: 'سفارشی',
     },
     addMoreModel: 'برای افزودن مدل‌های بیشتر به تنظیمات بروید',
+    settingsLink: 'تنظیمات ارائه دهنده مدل',
+    capabilities: 'قابلیت های چند وجهی',
   },
   menus: {
     status: 'بتا',
@@ -138,6 +148,9 @@ const translation = {
     newApp: 'برنامه جدید',
     newDataset: 'ایجاد دانش',
     tools: 'ابزارها',
+    exploreMarketplace: 'بازار را کاوش کنید',
+    appDetail: 'جزئیات برنامه',
+    account: 'حساب',
   },
   userProfile: {
     settings: 'تنظیمات',
@@ -150,6 +163,9 @@ const translation = {
     community: 'انجمن',
     about: 'درباره',
     logout: 'خروج',
+    github: 'گیت‌هاب',
+    compliance: 'انطباق',
+    support: 'پشتیبانی',
   },
   settings: {
     accountGroup: 'حساب کاربری',
@@ -163,6 +179,7 @@ const translation = {
     dataSource: 'منبع داده',
     plugin: 'افزونه‌ها',
     apiBasedExtension: 'توسعه مبتنی بر API',
+    generalGroup: 'عمومی',
   },
   account: {
     avatar: 'آواتار',
@@ -198,6 +215,9 @@ const translation = {
     deleteSuccessTip: 'حساب شما برای پایان دادن به حذف به زمان نیاز دارد. وقتی همه چیز تمام شد به شما ایمیل خواهیم زد.',
     deletePrivacyLinkTip: 'برای کسب اطلاعات بیشتر در مورد نحوه مدیریت داده های شما، لطفا به ما مراجعه کنید',
     feedbackLabel: 'به ما بگویید چرا حساب خود را حذف کرده اید؟',
+    editWorkspaceInfo: 'ویرایش اطلاعات فضای کار',
+    workspaceName: 'نام فضای کاری',
+    workspaceIcon: 'آیکون محیط کار',
   },
   members: {
     team: 'تیم',
@@ -290,6 +310,7 @@ const translation = {
       usedUp: 'سهمیه آزمایشی تمام شده است. ارائه‌دهنده مدل خود را اضافه کنید.',
       useYourModel: 'در حال حاضر از ارائه‌دهنده مدل خود استفاده می‌کنید.',
       close: 'بستن',
+      trialQuotaTip: 'سهمیه آزمایشی Anthropic شما در تاریخ 2025/03/11 منقضی می شود و پس از آن دیگر در دسترس نخواهد بود. لطفا به موقع از آن استفاده کنید.',
     },
     anthropic: {
       using: 'قابلیت تعبیه از این استفاده می‌کند',
@@ -401,6 +422,12 @@ const translation = {
     loadBalancingLeastKeyWarning: 'برای فعال کردن تعادل بار، حداقل 2 کلید باید فعال باشند.',
     loadBalancingInfo: 'به طور پیش‌فرض، تعادل بار از استراتژی Round-robin استفاده می‌کند. اگر محدودیت نرخ فعال شود، یک دوره خنک شدن 1 دقیقه‌ای اعمال خواهد شد.',
     upgradeForLoadBalancing: 'برای فعال کردن تعادل بار، طرح خود را ارتقا دهید.',
+    emptyProviderTitle: 'ارائه دهنده مدل راه اندازی نشده است',
+    toBeConfigured: 'پیکربندی شود',
+    configureTip: 'api-key را راه اندازی کنید یا مدل را برای استفاده اضافه کنید',
+    installProvider: 'نصب ارائه دهندگان مدل',
+    discoverMore: 'اطلاعات بیشتر در',
+    emptyProviderTip: 'لطفا ابتدا یک ارائه دهنده مدل نصب کنید.',
   },
   dataSource: {
     add: 'افزودن منبع داده',
@@ -444,7 +471,7 @@ const translation = {
   apiBasedExtension: {
     title: 'افزونه‌های مبتنی بر API مدیریت متمرکز API را فراهم می‌کنند و پیکربندی را برای استفاده آسان در برنامه‌های Dify ساده می‌کنند.',
     link: 'نحوه توسعه افزونه API خود را بیاموزید.',
-    linkUrl: 'https://docs.dify.ai/features/extension/api_based_extension',
+    linkUrl: 'https://docs.dify.ai/en/guides/extension/api-based-extension/README',
     add: 'افزودن افزونه API',
     selector: {
       title: 'افزونه API',
@@ -530,6 +557,9 @@ const translation = {
       hitScore: 'امتیاز بازیابی:',
     },
     inputPlaceholder: 'با ربات صحبت کنید',
+    thought: 'فکر',
+    thinking: 'تفکر...',
+    resend: 'دوباره ارسال کنید',
   },
   promptEditor: {
     placeholder: 'دستور خود را اینجا بنویسید، «{» را وارد کنید تا یک متغیر درج کنید، «/» را وارد کنید تا یک بلوک محتوای دستور درج کنید',
@@ -616,10 +646,31 @@ const translation = {
   license: {
     expiring_plural: 'انقضا در {{count}} روز',
     expiring: 'انقضا در یک روز',
+    unlimited: 'نامحدود',
   },
   pagination: {
     perPage: 'موارد در هر صفحه',
   },
+  theme: {
+    auto: 'سیستم',
+    theme: 'تم',
+    dark: 'تاریک',
+    light: 'نور',
+  },
+  compliance: {
+    soc2Type1: 'گزارش نوع I SOC 2',
+    sandboxUpgradeTooltip: 'تنها با برنامه حرفه‌ای یا تیمی در دسترس است.',
+    gdpr: 'GDPR DPA',
+    soc2Type2: 'گزارش نوع II SOC 2',
+    iso27001: 'گواهینامه ISO 27001:2022',
+    professionalUpgradeTooltip: 'تنها با برنامه تیم یا بالاتر در دسترس است.',
+  },
+  imageInput: {
+    dropImageHere: 'عکس خود را اینجا رها کنید، یا',
+    supportedFormats: 'از فرمت‌های PNG، JPG، JPEG، WEBP و GIF پشتیبانی می‌کند',
+    browse: 'مرورگر',
+  },
+  you: 'تو',
 }
 
 export default translation

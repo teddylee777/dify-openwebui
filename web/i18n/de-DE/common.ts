@@ -50,6 +50,14 @@ const translation = {
     submit: 'Senden',
     skip: 'Schiff',
     imageCopied: 'Kopiertes Bild',
+    deleteApp: 'App löschen',
+    viewDetails: 'Details anzeigen',
+    in: 'in',
+    copied: 'Kopiert',
+    downloadFailed: 'Download fehlgeschlagen. Bitte versuchen Sie es später erneut.',
+    downloadSuccess: 'Download abgeschlossen.',
+    more: 'Mehr',
+    format: 'Format',
   },
   placeholder: {
     input: 'Bitte eingeben',
@@ -122,6 +130,8 @@ const translation = {
       Custom: 'Benutzerdefiniert',
     },
     addMoreModel: 'Gehen Sie zu den Einstellungen, um mehr Modelle hinzuzufügen',
+    settingsLink: 'Einstellungen für Modellanbieter',
+    capabilities: 'Multimodale Fähigkeiten',
   },
   menus: {
     status: 'Beta',
@@ -134,6 +144,9 @@ const translation = {
     newApp: 'Neue App',
     newDataset: 'Wissen erstellen',
     tools: 'Werkzeuge',
+    exploreMarketplace: 'Marketplace erkunden',
+    appDetail: 'App-Details',
+    account: 'Konto',
   },
   userProfile: {
     settings: 'Einstellungen',
@@ -146,6 +159,9 @@ const translation = {
     community: 'Gemeinschaft',
     about: 'Über',
     logout: 'Abmelden',
+    compliance: 'Einhaltung',
+    support: 'Unterstützung',
+    github: 'GitHub',
   },
   settings: {
     accountGroup: 'KONTO',
@@ -159,6 +175,7 @@ const translation = {
     dataSource: 'Datenquelle',
     plugin: 'Plugins',
     apiBasedExtension: 'API-Erweiterung',
+    generalGroup: 'ALLGEMEIN',
   },
   account: {
     avatar: 'Avatar',
@@ -194,6 +211,9 @@ const translation = {
     feedbackLabel: 'Sagen Sie uns, warum Sie Ihr Konto gelöscht haben?',
     feedbackPlaceholder: 'Wahlfrei',
     permanentlyDeleteButton: 'Konto dauerhaft löschen',
+    workspaceIcon: 'Arbeitsbereichssymbol',
+    workspaceName: 'Arbeitsbereichsname',
+    editWorkspaceInfo: 'Arbeitsbereichsinformationen bearbeiten',
   },
   members: {
     team: 'Team',
@@ -286,6 +306,7 @@ const translation = {
       usedUp: 'Testkontingent aufgebraucht. Eigenen Modellanbieter hinzufügen.',
       useYourModel: 'Derzeit wird eigener Modellanbieter verwendet.',
       close: 'Schließen',
+      trialQuotaTip: 'Ihr Anthropic-Testkontingent läuft am 11.03.2025 ab und steht danach nicht mehr zur Verfügung. Bitte machen Sie rechtzeitig davon Gebrauch.',
     },
     anthropic: {
       using: 'Die Einbettungsfähigkeit verwendet',
@@ -397,6 +418,12 @@ const translation = {
     defaultConfig: 'Standardkonfiguration',
     apiKeyRateLimit: 'Ratenlimit wurde erreicht, verfügbar nach {{seconds}}s',
     loadBalancingInfo: 'Standardmäßig wird für den Lastenausgleich die Round-Robin-Strategie verwendet. Wenn die Ratenbegrenzung ausgelöst wird, wird eine Abklingzeit von 1 Minute angewendet.',
+    emptyProviderTip: 'Bitte installieren Sie zuerst einen Modellanbieter.',
+    configureTip: 'Einrichten des API-Schlüssels oder Hinzufügen des zu verwendenden Modells',
+    discoverMore: 'Erfahren Sie mehr in',
+    installProvider: 'Installieren von Modellanbietern',
+    toBeConfigured: 'Zu konfigurieren',
+    emptyProviderTitle: 'Modellanbieter nicht eingerichtet',
   },
   dataSource: {
     add: 'Eine Datenquelle hinzufügen',
@@ -440,7 +467,7 @@ const translation = {
   apiBasedExtension: {
     title: 'API-Erweiterungen bieten zentralisiertes API-Management und vereinfachen die Konfiguration für eine einfache Verwendung in Difys Anwendungen.',
     link: 'Erfahren Sie, wie Sie Ihre eigene API-Erweiterung entwickeln.',
-    linkUrl: 'https://docs.dify.ai/features/extension/api_based_extension',
+    linkUrl: 'https://docs.dify.ai/en/guides/extension/api-based-extension/README',
     add: 'API-Erweiterung hinzufügen',
     selector: {
       title: 'API-Erweiterung',
@@ -525,7 +552,10 @@ const translation = {
       vectorHash: 'Vektorhash:',
       hitScore: 'Abrufwertung:',
     },
-    inputPlaceholder: 'Sprechen Sie mit dem Bot',
+    inputPlaceholder: 'Sprechen Sie mit dem {{botName}}',
+    thought: 'Gedanke',
+    thinking: 'Denken...',
+    resend: 'Erneut senden',
   },
   promptEditor: {
     placeholder: 'Schreiben Sie hier Ihr Aufforderungswort, geben Sie \'{\' ein, um eine Variable einzufügen, geben Sie \'/\' ein, um einen Aufforderungs-Inhaltsblock einzufügen',
@@ -616,10 +646,31 @@ const translation = {
   license: {
     expiring: 'Läuft an einem Tag ab',
     expiring_plural: 'Läuft in {{count}} Tagen ab',
+    unlimited: 'Unbegrenzt',
   },
   pagination: {
     perPage: 'Artikel pro Seite',
   },
+  theme: {
+    light: 'Licht',
+    theme: 'Thema',
+    dark: 'dunkel',
+    auto: 'System',
+  },
+  compliance: {
+    iso27001: 'ISO 27001:2022 Zertifizierung',
+    professionalUpgradeTooltip: 'Nur verfügbar mit einem Teamplan oder höher.',
+    gdpr: 'DSGVO DPA',
+    soc2Type2: 'SOC 2 Typ II Bericht',
+    soc2Type1: 'SOC 2 Typ I Bericht',
+    sandboxUpgradeTooltip: 'Nur verfügbar mit einem Professional- oder Teamplan.',
+  },
+  imageInput: {
+    dropImageHere: 'Laden Sie Ihr Bild hierher hoch oder',
+    browse: 'blättern',
+    supportedFormats: 'Unterstützt PNG, JPG, JPEG, WEBP und GIF',
+  },
+  you: 'Du',
 }
 
 export default translation

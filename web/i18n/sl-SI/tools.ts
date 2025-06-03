@@ -15,7 +15,6 @@ const translation = {
   },
   author: 'Avtor',
   auth: {
-    unauthorized: 'Za avtorizacijo',
     authorized: 'Avtorizirano',
     setup: 'Nastavite avtorizacijo za uporabo',
     setupModalTitle: 'Nastavi avtorizacijo',
@@ -133,6 +132,7 @@ const translation = {
     number: 'številka',
     required: 'Obvezno',
     infoAndSetting: 'Informacije in nastavitve',
+    file: 'datoteka',
   },
   noCustomTool: {
     title: 'Ni prilagojenih orodij!',
@@ -150,6 +150,8 @@ const translation = {
   howToGet: 'Kako pridobiti',
   openInStudio: 'Odpri v Studiju',
   toolNameUsageTip: 'Ime klica orodja za sklepanja in pozivanje agenta',
+  copyToolName: 'Kopiraj ime',
+  noTools: 'Orodja niso bila najdena',
 }
 
 export default translation

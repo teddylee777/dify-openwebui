@@ -36,8 +36,18 @@ const useConfig = (id: string, payload: HttpNodeType) => {
         ...inputs,
       }
       const bodyData = newInputs.body.data
-      if (typeof bodyData === 'string')
-        newInputs.body.data = transformToBodyPayload(bodyData, [BodyType.formData, BodyType.xWwwFormUrlencoded].includes(newInputs.body.type))
+      if (typeof bodyData === 'string') {
+        newInputs.body = {
+          ...newInputs.body,
+          data: transformToBodyPayload(bodyData, [BodyType.formData, BodyType.xWwwFormUrlencoded].includes(newInputs.body.type)),
+        }
+      }
+      else if (!bodyData) {
+        newInputs.body = {
+          ...newInputs.body,
+          data: [],
+        }
+      }
 
       setInputs(newInputs)
       setIsDataReady(true)
@@ -147,7 +157,7 @@ const useConfig = (id: string, payload: HttpNodeType) => {
     inputs.url,
     inputs.headers,
     inputs.params,
-    typeof inputs.body.data === 'string' ? inputs.body.data : inputs.body.data.map(item => item.value).join(''),
+    typeof inputs.body.data === 'string' ? inputs.body.data : inputs.body.data?.map(item => item.value).join(''),
     fileVarInputs,
   ])
 

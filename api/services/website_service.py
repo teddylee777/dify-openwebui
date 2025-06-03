@@ -3,10 +3,11 @@ import json
 from typing import Any
 
 import requests
-from flask_login import current_user  # type: ignore
+from flask_login import current_user
 
 from core.helper import encrypter
 from core.rag.extractor.firecrawl.firecrawl_app import FirecrawlApp
+from core.rag.extractor.watercrawl.provider import WaterCrawlProvider
 from extensions.ext_redis import redis_client
 from extensions.ext_storage import storage
 from services.auth.api_key_auth_service import ApiKeyAuthService
@@ -59,6 +60,13 @@ class WebsiteService:
             time = str(datetime.datetime.now().timestamp())
             redis_client.setex(website_crawl_time_cache_key, 3600, time)
             return {"status": "active", "job_id": job_id}
+        elif provider == "watercrawl":
+            # decrypt api_key
+            api_key = encrypter.decrypt_token(
+                tenant_id=current_user.current_tenant_id, token=credentials.get("config").get("api_key")
+            )
+            return WaterCrawlProvider(api_key, credentials.get("config").get("base_url", None)).crawl_url(url, options)
+
         elif provider == "jinareader":
             api_key = encrypter.decrypt_token(
                 tenant_id=current_user.current_tenant_id, token=credentials.get("config").get("api_key")
@@ -116,6 +124,14 @@ class WebsiteService:
                     time_consuming = abs(end_time - float(start_time))
                     crawl_status_data["time_consuming"] = f"{time_consuming:.2f}"
                     redis_client.delete(website_crawl_time_cache_key)
+        elif provider == "watercrawl":
+            # decrypt api_key
+            api_key = encrypter.decrypt_token(
+                tenant_id=current_user.current_tenant_id, token=credentials.get("config").get("api_key")
+            )
+            crawl_status_data = WaterCrawlProvider(
+                api_key, credentials.get("config").get("base_url", None)
+            ).get_crawl_status(job_id)
         elif provider == "jinareader":
             api_key = encrypter.decrypt_token(
                 tenant_id=current_user.current_tenant_id, token=credentials.get("config").get("api_key")
@@ -157,29 +173,35 @@ class WebsiteService:
         return crawl_status_data
 
     @classmethod
-    def get_crawl_url_data(cls, job_id: str, provider: str, url: str, tenant_id: str) -> dict[Any, Any] | None:
+    def get_crawl_url_data(cls, job_id: str, provider: str, url: str, tenant_id: str) -> dict[str, Any] | None:
         credentials = ApiKeyAuthService.get_auth_credentials(tenant_id, "website", provider)
         # decrypt api_key
         api_key = encrypter.decrypt_token(tenant_id=tenant_id, token=credentials.get("config").get("api_key"))
-        # FIXME data is redefine too many times here, use Any to ease the type checking, fix it later
-        data: Any
+
         if provider == "firecrawl":
+            crawl_data: list[dict[str, Any]] | None = None
             file_key = "website_files/" + job_id + ".txt"
             if storage.exists(file_key):
-                d = storage.load_once(file_key)
-                if d:
-                    data = json.loads(d.decode("utf-8"))
+                stored_data = storage.load_once(file_key)
+                if stored_data:
+                    crawl_data = json.loads(stored_data.decode("utf-8"))
             else:
                 firecrawl_app = FirecrawlApp(api_key=api_key, base_url=credentials.get("config").get("base_url", None))
                 result = firecrawl_app.check_crawl_status(job_id)
                 if result.get("status") != "completed":
                     raise ValueError("Crawl job is not completed")
-                data = result.get("data")
-            if data:
-                for item in data:
+                crawl_data = result.get("data")
+
+            if crawl_data:
+                for item in crawl_data:
                     if item.get("source_url") == url:
                         return dict(item)
             return None
+        elif provider == "watercrawl":
+            api_key = encrypter.decrypt_token(tenant_id=tenant_id, token=credentials.get("config").get("api_key"))
+            return WaterCrawlProvider(api_key, credentials.get("config").get("base_url", None)).get_crawl_url_data(
+                job_id, url
+            )
         elif provider == "jinareader":
             if not job_id:
                 response = requests.get(
@@ -190,23 +212,24 @@ class WebsiteService:
                     raise ValueError("Failed to crawl")
                 return dict(response.json().get("data", {}))
             else:
-                api_key = encrypter.decrypt_token(tenant_id=tenant_id, token=credentials.get("config").get("api_key"))
-                response = requests.post(
+                # Get crawl status first
+                status_response = requests.post(
                     "https://adaptivecrawlstatus-kir3wx7b3a-uc.a.run.app",
                     headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
                     json={"taskId": job_id},
                 )
-                data = response.json().get("data", {})
-                if data.get("status") != "completed":
+                status_data = status_response.json().get("data", {})
+                if status_data.get("status") != "completed":
                     raise ValueError("Crawl job is not completed")
 
-                response = requests.post(
+                # Get processed data
+                data_response = requests.post(
                     "https://adaptivecrawlstatus-kir3wx7b3a-uc.a.run.app",
                     headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
-                    json={"taskId": job_id, "urls": list(data.get("processed", {}).keys())},
+                    json={"taskId": job_id, "urls": list(status_data.get("processed", {}).keys())},
                 )
-                data = response.json().get("data", {})
-                for item in data.get("processed", {}).values():
+                processed_data = data_response.json().get("data", {})
+                for item in processed_data.get("processed", {}).values():
                     if item.get("data", {}).get("url") == url:
                         return dict(item.get("data", {}))
             return None
@@ -223,5 +246,8 @@ class WebsiteService:
             params = {"onlyMainContent": only_main_content}
             result = firecrawl_app.scrape_url(url, params)
             return result
+        elif provider == "watercrawl":
+            api_key = encrypter.decrypt_token(tenant_id=tenant_id, token=credentials.get("config").get("api_key"))
+            return WaterCrawlProvider(api_key, credentials.get("config").get("base_url", None)).scrape_url(url)
         else:
             raise ValueError("Invalid provider")

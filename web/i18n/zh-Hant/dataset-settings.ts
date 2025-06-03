@@ -25,6 +25,7 @@ const translation = {
       learnMore: '瞭解更多',
       description: '關於檢索方法。',
       longDescription: '關於檢索方法，您可以隨時在知識庫設定中更改此設定。',
+      method: '檢索方法',
     },
     save: '儲存',
     permissionsInvitedMembers: '部分團隊成員',
@@ -35,6 +36,7 @@ const translation = {
     indexMethodChangeToEconomyDisabledTip: '不適用於從 HQ 降級到 ECO',
     upgradeHighQualityTip: '升級到高品質模式后，無法恢復到經濟模式',
     helpText: '瞭解如何編寫良好的數據集描述。',
+    searchModel: '搜索模型',
   },
 }
 

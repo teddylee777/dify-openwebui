@@ -103,7 +103,7 @@ const translation = {
       edit: 'Edit annotation',
     },
     dataSet: {
-      title: 'Context',
+      title: 'Knowledge',
       noData: 'You can import Knowledge as context',
       words: 'Words',
       textBlocks: 'Text Blocks',
@@ -368,6 +368,7 @@ const translation = {
     'inputPlaceholder': 'Please input',
     'content': 'Content',
     'required': 'Required',
+    'hide': 'Hide',
     'file': {
       supportFileTypes: 'Support File Types',
       image: {
@@ -481,8 +482,9 @@ const translation = {
     },
     retrieveMultiWay: {
       title: 'Multi-path retrieval',
-      description: 'Based on user intent, queries across all Knowledge, retrieves relevant text from multi-sources, and selects the best results matching the user query after reranking. ',
+      description: 'Based on user intent, queries across all Knowledge, retrieves relevant text from multi-sources, and selects the best results matching the user query after reranking.',
     },
+    embeddingModelRequired: 'A configured Embedding Model is required',
     rerankModelRequired: 'A configured Rerank Model is required',
     params: 'Params',
     top_k: 'Top K',

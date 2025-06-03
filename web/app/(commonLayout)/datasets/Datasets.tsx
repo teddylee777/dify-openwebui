@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import useSWRInfinite from 'swr/infinite'
 import { debounce } from 'lodash-es'
-import { useTranslation } from 'react-i18next'
 import NewDatasetCard from './NewDatasetCard'
 import DatasetCard from './DatasetCard'
 import type { DataSetListResponse, FetchDatasetsParams } from '@/models/datasets'
 import { fetchDatasets } from '@/service/datasets'
 import { useAppContext } from '@/context/app-context'
+import { useTranslation } from 'react-i18next'
 
 const getKey = (
   pageIndex: number,
@@ -48,6 +48,7 @@ const Datasets = ({
   keywords,
   includeAll,
 }: Props) => {
+  const { t } = useTranslation()
   const { isCurrentWorkspaceEditor } = useAppContext()
   const { data, isLoading, setSize, mutate } = useSWRInfinite(
     (pageIndex: number, previousPageData: DataSetListResponse) => getKey(pageIndex, previousPageData, tags, keywords, includeAll),
@@ -57,30 +58,34 @@ const Datasets = ({
   const loadingStateRef = useRef(false)
   const anchorRef = useRef<HTMLAnchorElement>(null)
 
-  const { t } = useTranslation()
-
   useEffect(() => {
     loadingStateRef.current = isLoading
-    document.title = `${t('dataset.knowledge')} - Dify`
-  }, [isLoading])
+  }, [isLoading, t])
 
-  useEffect(() => {
-    const onScroll = debounce(() => {
-      if (!loadingStateRef.current) {
-        const { scrollTop, clientHeight } = containerRef.current!
-        const anchorOffset = anchorRef.current!.offsetTop
+  const onScroll = useCallback(
+    debounce(() => {
+      if (!loadingStateRef.current && containerRef.current && anchorRef.current) {
+        const { scrollTop, clientHeight } = containerRef.current
+        const anchorOffset = anchorRef.current.offsetTop
         if (anchorOffset - scrollTop - clientHeight < 100)
           setSize(size => size + 1)
       }
-    }, 50)
+    }, 50),
+    [setSize],
+  )
 
-    containerRef.current?.addEventListener('scroll', onScroll)
-    return () => containerRef.current?.removeEventListener('scroll', onScroll)
-  }, [])
+  useEffect(() => {
+    const currentContainer = containerRef.current
+    currentContainer?.addEventListener('scroll', onScroll)
+    return () => {
+      currentContainer?.removeEventListener('scroll', onScroll)
+      onScroll.cancel()
+    }
+  }, [onScroll])
 
   return (
-    <nav className='grid content-start grid-cols-1 gap-4 px-12 pt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grow shrink-0'>
-      { isCurrentWorkspaceEditor && <NewDatasetCard ref={anchorRef} /> }
+    <nav className='grid shrink-0 grow grid-cols-1 content-start gap-4 px-12 pt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+      {isCurrentWorkspaceEditor && <NewDatasetCard ref={anchorRef} />}
       {data?.map(({ data: datasets }) => datasets.map(dataset => (
         <DatasetCard key={dataset.id} dataset={dataset} onSuccess={mutate} />),
       ))}

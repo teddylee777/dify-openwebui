@@ -14,7 +14,6 @@ const translation = {
   },
   author: 'Tác giả',
   auth: {
-    unauthorized: 'Chưa xác thực',
     authorized: 'Đã xác thực',
     setup: 'Thiết lập xác thực để sử dụng',
     setupModalTitle: 'Thiết lập xác thực',
@@ -121,6 +120,7 @@ const translation = {
     number: 'số',
     required: 'Bắt buộc',
     infoAndSetting: 'Thông tin & Cài đặt',
+    file: 'tệp',
   },
   noCustomTool: {
     title: 'Chưa có công cụ tùy chỉnh!',
@@ -150,6 +150,8 @@ const translation = {
   toolNameUsageTip: 'Tên cuộc gọi công cụ để lý luận và nhắc nhở tổng đài viên',
   customToolTip: 'Tìm hiểu thêm về các công cụ tùy chỉnh Dify',
   openInStudio: 'Mở trong Studio',
+  noTools: 'Không tìm thấy công cụ',
+  copyToolName: 'Sao chép tên',
 }
 
 export default translation

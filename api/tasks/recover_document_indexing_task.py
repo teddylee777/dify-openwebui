@@ -3,7 +3,6 @@ import time
 
 import click
 from celery import shared_task  # type: ignore
-from werkzeug.exceptions import NotFound
 
 from core.indexing_runner import DocumentIsPausedError, IndexingRunner
 from extensions.ext_database import db
@@ -25,7 +24,9 @@ def recover_document_indexing_task(dataset_id: str, document_id: str):
     document = db.session.query(Document).filter(Document.id == document_id, Document.dataset_id == dataset_id).first()
 
     if not document:
-        raise NotFound("Document not found")
+        logging.info(click.style("Document not found: {}".format(document_id), fg="red"))
+        db.session.close()
+        return
 
     try:
         indexing_runner = IndexingRunner()
@@ -42,4 +43,6 @@ def recover_document_indexing_task(dataset_id: str, document_id: str):
     except DocumentIsPausedError as ex:
         logging.info(click.style(str(ex), fg="yellow"))
     except Exception:
-        pass
+        logging.exception("recover_document_indexing_task failed, document_id: {}".format(document_id))
+    finally:
+        db.session.close()

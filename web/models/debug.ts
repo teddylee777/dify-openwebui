@@ -1,8 +1,14 @@
 import type { AgentStrategy, ModelModeType, RETRIEVE_TYPE, ToolItem, TtsAutoPlay } from '@/types/app'
 import type {
   RerankingModeEnum,
+  WeightedScoreEnum,
 } from '@/models/datasets'
 import type { FileUpload } from '@/app/components/base/features/types'
+import type {
+  MetadataFilteringConditions,
+  MetadataFilteringModeEnum,
+} from '@/app/components/workflow/nodes/knowledge-retrieval/types'
+import type { ModelConfig as NodeModelConfig } from '@/app/components/workflow/types'
 export type Inputs = Record<string, string | number | object>
 
 export enum PromptMode {
@@ -53,6 +59,7 @@ export type PromptVariable = {
   config?: Record<string, any>
   icon?: string
   icon_background?: string
+  hide?: boolean // used in frontend to hide variable
 }
 
 export type CompletionParams = {
@@ -160,6 +167,7 @@ export type DatasetConfigs = {
   }
   reranking_mode?: RerankingModeEnum
   weights?: {
+    weight_type: WeightedScoreEnum
     vector_setting: {
       vector_weight: number
       embedding_provider_name: string
@@ -170,6 +178,9 @@ export type DatasetConfigs = {
     }
   }
   reranking_enable?: boolean
+  metadata_filtering_mode?: MetadataFilteringModeEnum
+  metadata_filtering_conditions?: MetadataFilteringConditions
+  metadata_model_config?: NodeModelConfig
 }
 
 export type DebugRequestBody = {

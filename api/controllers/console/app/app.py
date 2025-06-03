@@ -1,8 +1,8 @@
 import uuid
 from typing import cast
 
-from flask_login import current_user  # type: ignore
-from flask_restful import Resource, inputs, marshal, marshal_with, reqparse  # type: ignore
+from flask_login import current_user
+from flask_restful import Resource, inputs, marshal, marshal_with, reqparse
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from werkzeug.exceptions import BadRequest, Forbidden, abort
@@ -17,15 +17,13 @@ from controllers.console.wraps import (
 )
 from core.ops.ops_trace_manager import OpsTraceManager
 from extensions.ext_database import db
-from fields.app_fields import (
-    app_detail_fields,
-    app_detail_fields_with_site,
-    app_pagination_fields,
-)
+from fields.app_fields import app_detail_fields, app_detail_fields_with_site, app_pagination_fields
 from libs.login import login_required
 from models import Account, App
 from services.app_dsl_service import AppDslService, ImportMode
 from services.app_service import AppService
+from services.enterprise.enterprise_service import EnterpriseService
+from services.feature_service import FeatureService
 
 ALLOW_CREATE_APP_MODES = ["chat", "agent-chat", "advanced-chat", "workflow", "completion"]
 
@@ -50,7 +48,15 @@ class AppListApi(Resource):
         parser.add_argument(
             "mode",
             type=str,
-            choices=["chat", "workflow", "agent-chat", "channel", "all"],
+            choices=[
+                "completion",
+                "chat",
+                "advanced-chat",
+                "workflow",
+                "agent-chat",
+                "channel",
+                "all",
+            ],
             default="all",
             location="args",
             required=False,
@@ -67,7 +73,17 @@ class AppListApi(Resource):
         if not app_pagination:
             return {"data": [], "total": 0, "page": 1, "limit": 20, "has_more": False}
 
-        return marshal(app_pagination, app_pagination_fields)
+        if FeatureService.get_system_features().webapp_auth.enabled:
+            app_ids = [str(app.id) for app in app_pagination.items]
+            res = EnterpriseService.WebAppAuth.batch_get_app_access_mode_by_id(app_ids=app_ids)
+            if len(res) != len(app_ids):
+                raise BadRequest("Invalid app id in webapp auth")
+
+            for app in app_pagination.items:
+                if str(app.id) in res:
+                    app.access_mode = res[str(app.id)].access_mode
+
+        return marshal(app_pagination, app_pagination_fields), 200
 
     @setup_required
     @login_required
@@ -111,6 +127,10 @@ class AppApi(Resource):
 
         app_model = app_service.get_app(app_model)
 
+        if FeatureService.get_system_features().webapp_auth.enabled:
+            app_setting = EnterpriseService.WebAppAuth.get_app_access_mode_by_id(app_id=str(app_model.id))
+            app_model.access_mode = app_setting.access_mode
+
         return app_model
 
     @setup_required
@@ -130,7 +150,6 @@ class AppApi(Resource):
         parser.add_argument("icon_type", type=str, location="json")
         parser.add_argument("icon", type=str, location="json")
         parser.add_argument("icon_background", type=str, location="json")
-        parser.add_argument("max_active_requests", type=int, location="json")
         parser.add_argument("use_icon_as_answer_icon", type=bool, location="json")
         args = parser.parse_args()
 
@@ -316,7 +335,7 @@ class AppTraceApi(Resource):
     @account_initialization_required
     def post(self, app_id):
         # add app trace
-        if not current_user.is_admin_or_owner:
+        if not current_user.is_editor:
             raise Forbidden()
         parser = reqparse.RequestParser()
         parser.add_argument("enabled", type=bool, required=True, location="json")

@@ -2,6 +2,7 @@ import type {
   Edge as ReactFlowEdge,
   Node as ReactFlowNode,
   Viewport,
+  XYPosition,
 } from 'reactflow'
 import type { Resolution, TransferMethod } from '@/types/app'
 import type { ToolDefaultValue } from '@/app/components/workflow/block-selector/types'
@@ -14,6 +15,7 @@ import type {
   ErrorHandleTypeEnum,
 } from '@/app/components/workflow/nodes/_base/components/error-handle/types'
 import type { WorkflowRetryConfig } from '@/app/components/workflow/nodes/_base/components/retry/types'
+import type { StructuredOutput } from '@/app/components/workflow/nodes/llm/types'
 
 export enum BlockEnum {
   Start = 'start',
@@ -35,6 +37,10 @@ export enum BlockEnum {
   ListFilter = 'list-operator',
   IterationStart = 'iteration-start',
   Assigner = 'assigner', // is now named as VariableAssigner
+  Agent = 'agent',
+  Loop = 'loop',
+  LoopStart = 'loop-start',
+  LoopEnd = 'loop-end',
 }
 
 export enum ControlMode {
@@ -61,7 +67,7 @@ export type CommonNodeType<T = {}> = {
   _singleRunningStatus?: NodeRunningStatus
   _isCandidate?: boolean
   _isBundled?: boolean
-  _children?: string[]
+  _children?: { nodeId: string; nodeType: BlockEnum }[]
   _isEntering?: boolean
   _showAddVariablePopup?: boolean
   _holdAddVariablePopup?: boolean
@@ -78,6 +84,11 @@ export type CommonNodeType<T = {}> = {
   type: BlockEnum
   width?: number
   height?: number
+  position?: XYPosition
+  _loopLength?: number
+  _loopIndex?: number
+  isInLoop?: boolean
+  loop_id?: string
   error_strategy?: ErrorHandleTypeEnum
   retry_config?: WorkflowRetryConfig
   default_value?: DefaultValueForm[]
@@ -93,6 +104,8 @@ export type CommonEdgeType = {
   _waitingRun?: boolean
   isInIteration?: boolean
   iteration_id?: string
+  isInLoop?: boolean
+  loop_id?: string
   sourceType: BlockEnum
   targetType: BlockEnum
 }
@@ -167,6 +180,7 @@ export enum InputVarType {
   iterator = 'iterator', // iteration input
   singleFile = 'file',
   multiFiles = 'file-list',
+  loop = 'loop', // loop input
 }
 
 export type InputVar = {
@@ -184,6 +198,7 @@ export type InputVar = {
   hint?: string
   options?: string[]
   value_selector?: ValueSelector
+  hide: boolean
 } & Partial<UploadFileSetting>
 
 export type ModelConfig = {
@@ -246,16 +261,23 @@ export enum VarType {
   any = 'any',
 }
 
+export enum ValueType {
+  variable = 'variable',
+  constant = 'constant',
+}
+
 export type Var = {
   variable: string
   type: VarType
-  children?: Var[] // if type is obj, has the children struct
+  children?: Var[] | StructuredOutput // if type is obj, has the children struct
   isParagraph?: boolean
   isSelect?: boolean
   options?: string[]
   required?: boolean
   des?: string
   isException?: boolean
+  isLoopVariable?: boolean
+  nodeId?: string
 }
 
 export type NodeOutPutVar = {
@@ -263,6 +285,7 @@ export type NodeOutPutVar = {
   title: string
   vars: Var[]
   isStartNode?: boolean
+  isLoop?: boolean
 }
 
 export type Block = {
@@ -329,6 +352,7 @@ export type RunFile = {
   transfer_method: TransferMethod[]
   url?: string
   upload_file_id?: string
+  related_id?: string
 }
 
 export type WorkflowRunningData = {
@@ -400,4 +424,15 @@ export type UploadFileSetting = {
 export type VisionSetting = {
   variable_selector: ValueSelector
   detail: Resolution
+}
+
+export enum WorkflowVersionFilterOptions {
+  all = 'all',
+  onlyYours = 'onlyYours',
+}
+
+export enum VersionHistoryContextMenuOptions {
+  restore = 'restore',
+  edit = 'edit',
+  delete = 'delete',
 }

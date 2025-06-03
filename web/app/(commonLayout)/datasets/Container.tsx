@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query'
 import ExternalAPIPanel from '../../components/datasets/external-api/external-api-panel'
 import Datasets from './Datasets'
 import DatasetFooter from './DatasetFooter'
-import ApiServer from './ApiServer'
+import ApiServer from '../../components/develop/ApiServer'
 import Doc from './Doc'
 import TabSliderNew from '@/app/components/base/tab-slider-new'
 import TagManagementModal from '@/app/components/base/tag-management'
@@ -29,14 +29,18 @@ import { useTabSearchParams } from '@/hooks/use-tab-searchparams'
 import { useStore as useTagStore } from '@/app/components/base/tag-management/store'
 import { useAppContext } from '@/context/app-context'
 import { useExternalApiPanel } from '@/context/external-api-panel-context'
+import { useGlobalPublicStore } from '@/context/global-public-context'
+import useDocumentTitle from '@/hooks/use-document-title'
 
 const Container = () => {
   const { t } = useTranslation()
+  const { systemFeatures } = useGlobalPublicStore()
   const router = useRouter()
   const { currentWorkspace, isCurrentWorkspaceOwner } = useAppContext()
   const showTagManagementModal = useTagStore(s => s.showTagManagementModal)
   const { showExternalApiPanel, setShowExternalApiPanel } = useExternalApiPanel()
   const [includeAll, { toggle: toggleIncludeAll }] = useBoolean(false)
+  useDocumentTitle(t('dataset.knowledge'))
 
   const options = useMemo(() => {
     return [
@@ -82,8 +86,8 @@ const Container = () => {
   }, [currentWorkspace, router])
 
   return (
-    <div ref={containerRef} className='grow relative flex flex-col bg-background-body overflow-y-auto scroll-container'>
-      <div className='sticky top-0 flex justify-between pt-4 px-12 pb-2 leading-[56px] bg-background-body z-10 flex-wrap gap-y-2'>
+    <div ref={containerRef} className='scroll-container relative flex grow flex-col overflow-y-auto bg-background-body'>
+      <div className='sticky top-0 z-10 flex flex-wrap items-center justify-between gap-y-2 bg-background-body px-12 pb-2 pt-4 leading-[56px]'>
         <TabSliderNew
           value={activeTab}
           onChange={newActiveTab => setActiveTab(newActiveTab)}
@@ -108,13 +112,13 @@ const Container = () => {
               onChange={e => handleKeywordsChange(e.target.value)}
               onClear={() => handleKeywordsChange('')}
             />
-            <div className="w-[1px] h-4 bg-divider-regular" />
+            <div className="h-4 w-[1px] bg-divider-regular" />
             <Button
-              className='gap-0.5 shadows-shadow-xs'
+              className='shadows-shadow-xs gap-0.5'
               onClick={() => setShowExternalApiPanel(true)}
             >
-              <ApiConnectionMod className='w-4 h-4 text-components-button-secondary-text' />
-              <div className='flex px-0.5 justify-center items-center gap-1 text-components-button-secondary-text system-sm-medium'>{t('dataset.externalAPIPanelTitle')}</div>
+              <ApiConnectionMod className='h-4 w-4 text-components-button-secondary-text' />
+              <div className='system-sm-medium flex items-center justify-center gap-1 px-0.5 text-components-button-secondary-text'>{t('dataset.externalAPIPanelTitle')}</div>
             </Button>
           </div>
         )}
@@ -123,7 +127,7 @@ const Container = () => {
       {activeTab === 'dataset' && (
         <>
           <Datasets containerRef={containerRef} tags={tagIDs} keywords={searchKeywords} includeAll={includeAll} />
-          <DatasetFooter />
+          {!systemFeatures.branding.enabled && <DatasetFooter />}
           {showTagManagementModal && (
             <TagManagementModal type='knowledge' show={showTagManagementModal} />
           )}

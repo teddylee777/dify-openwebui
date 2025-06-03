@@ -50,6 +50,14 @@ const translation = {
     submit: 'Trình',
     skip: 'Tàu',
     imageCopied: 'Hình ảnh sao chép',
+    deleteApp: 'Xóa ứng dụng',
+    viewDetails: 'Xem chi tiết',
+    copied: 'Sao chép',
+    in: 'trong',
+    more: 'Hơn',
+    downloadFailed: 'Tải xuống thất bại. Vui lòng thử lại sau.',
+    format: 'Định dạng',
+    downloadSuccess: 'Tải xuống đã hoàn thành.',
   },
   placeholder: {
     input: 'Vui lòng nhập',
@@ -122,6 +130,8 @@ const translation = {
       Custom: 'Tùy chỉnh',
     },
     addMoreModel: 'Điều chỉnh cài đặt để thêm mô hình',
+    settingsLink: 'Cài đặt nhà cung cấp mô hình',
+    capabilities: 'Khả năng đa phương thức',
   },
   menus: {
     status: 'beta',
@@ -134,6 +144,9 @@ const translation = {
     newApp: 'Ứng dụng mới',
     newDataset: 'Tạo Kiến thức',
     tools: 'Công cụ',
+    exploreMarketplace: 'Khám phá Marketplace',
+    appDetail: 'Chi tiết ứng dụng',
+    account: 'báo cáo',
   },
   userProfile: {
     settings: 'Cài đặt',
@@ -146,6 +159,9 @@ const translation = {
     community: 'Cộng đồng',
     about: 'Về chúng tôi',
     logout: 'Đăng xuất',
+    compliance: 'Tuân thủ',
+    github: 'GitHub',
+    support: 'Hỗ trợ',
   },
   settings: {
     accountGroup: 'TÀI KHOẢN',
@@ -159,6 +175,7 @@ const translation = {
     dataSource: 'Nguồn dữ liệu',
     plugin: 'Plugins',
     apiBasedExtension: 'Mở rộng dựa trên API',
+    generalGroup: 'TỔNG QUÁT',
   },
   account: {
     avatar: 'Ảnh đại diện',
@@ -194,6 +211,9 @@ const translation = {
     feedbackTitle: 'Phản hồi',
     feedbackLabel: 'Hãy cho chúng tôi biết lý do tại sao bạn xóa tài khoản của mình?',
     feedbackPlaceholder: 'Tùy chọn',
+    workspaceIcon: 'Biểu tượng không gian làm việc',
+    workspaceName: 'Tên không gian làm việc',
+    editWorkspaceInfo: 'Chỉnh sửa thông tin không gian làm việc',
   },
   members: {
     team: 'Nhóm',
@@ -286,6 +306,7 @@ const translation = {
       usedUp: 'Quota dùng thử đã hết. Thêm nhà cung cấp Mô hình của riêng bạn.',
       useYourModel: 'Hiện đang sử dụng nhà cung cấp Mô hình của riêng bạn.',
       close: 'Đóng',
+      trialQuotaTip: 'Hạn ngạch dùng thử Anthropic của bạn sẽ hết hạn vào 2025/03/11 và sẽ không còn khả dụng sau đó. Vui lòng sử dụng nó kịp thời.',
     },
     anthropic: {
       using: 'Khả năng nhúng đang sử dụng',
@@ -397,6 +418,12 @@ const translation = {
     apiKeyRateLimit: 'Đã đạt đến giới hạn tốc độ, có sẵn sau {{giây}} giây',
     upgradeForLoadBalancing: 'Nâng cấp gói của bạn để bật Cân bằng tải.',
     loadBalancingLeastKeyWarning: 'Để bật cân bằng tải, ít nhất 2 phím phải được bật.',
+    toBeConfigured: 'Được cấu hình',
+    emptyProviderTitle: 'Nhà cung cấp mô hình chưa được thiết lập',
+    discoverMore: 'Khám phá thêm trong',
+    emptyProviderTip: 'Vui lòng cài đặt nhà cung cấp mô hình trước.',
+    installProvider: 'Cài đặt nhà cung cấp mô hình',
+    configureTip: 'Thiết lập api-key hoặc thêm mô hình để sử dụng',
   },
   dataSource: {
     add: 'Thêm nguồn dữ liệu',
@@ -440,7 +467,7 @@ const translation = {
   apiBasedExtension: {
     title: 'Các tiện ích API cung cấp quản lý API tập trung, giúp cấu hình dễ dàng sử dụng trên các ứng dụng của Dify.',
     link: 'Tìm hiểu cách phát triển Phần mở rộng API của riêng bạn.',
-    linkUrl: 'https://docs.dify.ai/features/extension/api_based_extension',
+    linkUrl: 'https://docs.dify.ai/en/guides/extension/api-based-extension/README',
     add: 'Thêm Phần mở rộng API',
     selector: {
       title: 'Phần mở rộng API',
@@ -525,7 +552,10 @@ const translation = {
       vectorHash: 'Vector hash:',
       hitScore: 'Điểm truy xuất:',
     },
-    inputPlaceholder: 'Nói chuyện với Bot',
+    inputPlaceholder: 'Nói chuyện với {{botName}}',
+    thought: 'Tư duy',
+    thinking: 'Suy nghĩ...',
+    resend: 'Gửi lại',
   },
   promptEditor: {
     placeholder: 'Viết từ khóa của bạn ở đây, nhập \'{\' để chèn một biến, nhập \'/\' để chèn một khối nội dung nhắc nhở',
@@ -616,10 +646,31 @@ const translation = {
   license: {
     expiring_plural: 'Hết hạn sau {{count}} ngày',
     expiring: 'Hết hạn trong một ngày',
+    unlimited: 'Vô hạn',
   },
   pagination: {
     perPage: 'Mục trên mỗi trang',
   },
+  theme: {
+    auto: 'hệ thống',
+    theme: 'Chủ đề',
+    light: 'ánh sáng',
+    dark: 'tối',
+  },
+  compliance: {
+    iso27001: 'Chứng nhận ISO 27001:2022',
+    gdpr: 'GDPR DPA',
+    soc2Type1: 'Báo cáo loại SOC 2 Type I',
+    professionalUpgradeTooltip: 'Chỉ có sẵn với gói Team hoặc cao hơn.',
+    sandboxUpgradeTooltip: 'Chỉ có sẵn với gói Chuyên nghiệp hoặc Nhóm.',
+    soc2Type2: 'Báo cáo SOC 2 Type II',
+  },
+  imageInput: {
+    supportedFormats: 'Hỗ trợ PNG, JPG, JPEG, WEBP và GIF',
+    dropImageHere: 'Kéo hình ảnh của bạn vào đây, hoặc',
+    browse: 'duyệt',
+  },
+  you: 'Bạn',
 }
 
 export default translation

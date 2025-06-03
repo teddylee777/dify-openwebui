@@ -50,7 +50,7 @@ const translation = {
     empty: {
       title: 'ยังไม่มีเอกสาร',
       upload: {
-        tip: 'คุณสามารถอัปโหลดไฟล์ ซิงค์จากเว็บไซต์ หรือจากแอป webb เช่น Notion, GitHub เป็นต้น',
+        tip: 'คุณสามารถอัปโหลดไฟล์ ซิงค์จากเว็บไซต์ หรือจากแอป web เช่น Notion, GitHub เป็นต้น',
       },
       sync: {
         tip: 'Dify จะดาวน์โหลดไฟล์จาก Notion ของคุณเป็นระยะและดําเนินการให้เสร็จสมบูรณ์',
@@ -132,7 +132,7 @@ const translation = {
         language: 'ภาษา',
         authorPublisher: 'ผู้เขียน/สํานักพิมพ์',
         publishDate: 'วันที่เผยแพร่',
-        topicsKeywords: 'หัวข้อ/คําสําคัญ',
+        topicKeywords: 'หัวข้อ/คําสําคัญ',
         description: 'คำอธิบาย',
       },
       paper: {

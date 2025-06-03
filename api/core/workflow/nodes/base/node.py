@@ -4,9 +4,9 @@ from collections.abc import Generator, Mapping, Sequence
 from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar, Union, cast
 
 from core.workflow.entities.node_entities import NodeRunResult
+from core.workflow.entities.workflow_node_execution import WorkflowNodeExecutionStatus
 from core.workflow.nodes.enums import CONTINUE_ON_ERROR_NODE_TYPE, RETRY_ON_ERROR_NODE_TYPE, NodeType
 from core.workflow.nodes.event import NodeEvent, RunCompletedEvent
-from models.workflow import WorkflowNodeExecutionStatus
 
 from .entities import BaseNodeData
 
@@ -22,7 +22,7 @@ GenericNodeData = TypeVar("GenericNodeData", bound=BaseNodeData)
 
 
 class BaseNode(Generic[GenericNodeData]):
-    _node_data_cls: type[BaseNodeData]
+    _node_data_cls: type[GenericNodeData]
     _node_type: NodeType
 
     def __init__(
@@ -57,7 +57,7 @@ class BaseNode(Generic[GenericNodeData]):
         self.node_id = node_id
 
         node_data = self._node_data_cls.model_validate(config.get("data", {}))
-        self.node_data = cast(GenericNodeData, node_data)
+        self.node_data = node_data
 
     @abstractmethod
     def _run(self) -> NodeRunResult | Generator[Union[NodeEvent, "InNodeEvent"], None, None]:

@@ -15,7 +15,6 @@ const translation = {
   },
   author: 'द्वारा',
   auth: {
-    unauthorized: 'अधिकृत करने के लिए',
     authorized: 'अधिकृत',
     setup: 'उपयोग करने के लिए अधिकृति सेटअप करें',
     setupModalTitle: 'अधिकृति सेटअप करें',
@@ -137,6 +136,7 @@ const translation = {
     number: 'नंबर',
     required: 'आवश्यक',
     infoAndSetting: 'जानकारी और सेटिंग्स',
+    file: 'फाइल',
   },
   noCustomTool: {
     title: 'कोई कस्टम उपकरण नहीं!',
@@ -155,6 +155,8 @@ const translation = {
   howToGet: 'कैसे प्राप्त करें',
   openInStudio: 'स्टूडियो में खोलें',
   toolNameUsageTip: 'एजेंट तर्क और प्रेरण के लिए उपकरण कॉल नाम',
+  noTools: 'कोई उपकरण नहीं मिला',
+  copyToolName: 'नाम कॉपी करें',
 }
 
 export default translation

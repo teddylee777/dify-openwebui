@@ -50,6 +50,14 @@ const translation = {
     submit: 'Enviar',
     skip: 'Navio',
     imageCopied: 'Imagem copiada',
+    deleteApp: 'Excluir aplicativo',
+    copied: 'Copiado',
+    in: 'em',
+    viewDetails: 'Ver detalhes',
+    downloadFailed: 'Download falhou. Por favor, tente novamente mais tarde.',
+    more: 'Mais',
+    downloadSuccess: 'Download concluído.',
+    format: 'Formato',
   },
   placeholder: {
     input: 'Por favor, insira',
@@ -122,6 +130,8 @@ const translation = {
       Custom: 'Personalizado',
     },
     addMoreModel: 'Vá para configurações para adicionar mais modelos',
+    settingsLink: 'Configurações do provedor de modelos',
+    capabilities: 'Recursos multimodais',
   },
   menus: {
     status: 'beta',
@@ -134,6 +144,9 @@ const translation = {
     newApp: 'Novo App',
     newDataset: 'Criar Conhecimento',
     tools: 'Ferramentas',
+    exploreMarketplace: 'Explorar Mercado',
+    appDetail: 'Detalhes do aplicativo',
+    account: 'Conta',
   },
   userProfile: {
     settings: 'Configurações',
@@ -146,6 +159,9 @@ const translation = {
     community: 'Comunidade',
     about: 'Sobre',
     logout: 'Sair',
+    github: 'GitHub',
+    support: 'Suporte',
+    compliance: 'Conformidade',
   },
   settings: {
     accountGroup: 'CONTA',
@@ -159,6 +175,7 @@ const translation = {
     dataSource: 'Fonte de dados',
     plugin: 'Plugins',
     apiBasedExtension: 'Extensão baseada em API',
+    generalGroup: 'GERAL',
   },
   account: {
     avatar: 'Avatar',
@@ -194,6 +211,9 @@ const translation = {
     feedbackTitle: 'Realimentação',
     feedbackLabel: 'Diga-nos por que você excluiu sua conta?',
     feedbackPlaceholder: 'Opcional',
+    workspaceName: 'Nome do Espaço de Trabalho',
+    workspaceIcon: 'Ícone de Área de Trabalho',
+    editWorkspaceInfo: 'Editar Informações do Espaço de Trabalho',
   },
   members: {
     team: 'Equipe',
@@ -286,6 +306,7 @@ const translation = {
       usedUp: 'Cota de teste esgotada. Adicione seu próprio Fornecedor de Modelo.',
       useYourModel: 'Atualmente usando seu próprio Fornecedor de Modelo.',
       close: 'Fechar',
+      trialQuotaTip: 'Sua cota de teste do Anthropic expirará em 11/03/2025 e não estará mais disponível depois disso. Por favor, use-o a tempo.',
     },
     anthropic: {
       using: 'A capacidade de incorporação está sendo utilizada',
@@ -397,6 +418,12 @@ const translation = {
     loadBalancingInfo: 'Por padrão, o balanceamento de carga usa a estratégia Round-robin. Se a limitação de taxa for acionada, um período de espera de 1 minuto será aplicado.',
     apiKeyRateLimit: 'O limite de taxa foi atingido, disponível após {{seconds}}s',
     loadBalancingHeadline: 'Balanceamento de carga',
+    emptyProviderTip: 'Instale um provedor de modelo primeiro.',
+    installProvider: 'Instalar provedores de modelo',
+    discoverMore: 'Descubra mais em',
+    configureTip: 'Configure a chave de API ou adicione o modelo a ser usado',
+    emptyProviderTitle: 'Provedor de modelo não configurado',
+    toBeConfigured: 'A ser configurado',
   },
   dataSource: {
     add: 'Adicionar uma fonte de dados',
@@ -440,7 +467,7 @@ const translation = {
   apiBasedExtension: {
     title: 'As extensões de API fornecem gerenciamento centralizado de API, simplificando a configuração para uso fácil em todos os aplicativos da Dify.',
     link: 'Saiba como desenvolver sua própria Extensão de API.',
-    linkUrl: 'https://docs.dify.ai/features/extension/api_based_extension',
+    linkUrl: 'https://docs.dify.ai/en/guides/extension/api-based-extension/README',
     add: 'Adicionar Extensão de API',
     selector: {
       title: 'Extensão de API',
@@ -525,7 +552,10 @@ const translation = {
       vectorHash: 'Hash de vetor:',
       hitScore: 'Pontuação de recuperação:',
     },
-    inputPlaceholder: 'Fale com o bot',
+    inputPlaceholder: 'Fale com o {{botName}}',
+    thinking: 'Pensante...',
+    thought: 'Pensamento',
+    resend: 'Reenviar',
   },
   promptEditor: {
     placeholder: 'Escreva sua palavra de incentivo aqui, digite \'{\' para inserir uma variável, digite \'/\' para inserir um bloco de conteúdo de incentivo',
@@ -616,10 +646,31 @@ const translation = {
   license: {
     expiring: 'Expirando em um dia',
     expiring_plural: 'Expirando em {{count}} dias',
+    unlimited: 'Ilimitado',
   },
   pagination: {
     perPage: 'Itens por página',
   },
+  theme: {
+    light: 'luz',
+    dark: 'escuro',
+    theme: 'Tema',
+    auto: 'sistema',
+  },
+  compliance: {
+    soc2Type1: 'Relatório SOC 2 Tipo I',
+    sandboxUpgradeTooltip: 'Apenas disponível com um plano Profissional ou de Equipe.',
+    soc2Type2: 'Relatório SOC 2 Tipo II',
+    professionalUpgradeTooltip: 'Apenas disponível com um plano Team ou superior.',
+    gdpr: 'GDPR DPA',
+    iso27001: 'Certificação ISO 27001:2022',
+  },
+  imageInput: {
+    dropImageHere: 'Arraste sua imagem aqui, ou',
+    supportedFormats: 'Suporta PNG, JPG, JPEG, WEBP e GIF',
+    browse: 'navegar',
+  },
+  you: 'Você',
 }
 
 export default translation

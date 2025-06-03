@@ -4,7 +4,9 @@ from typing import Optional
 
 import requests
 from flask import current_app, redirect, request
-from flask_restful import Resource  # type: ignore
+from flask_restful import Resource
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 from werkzeug.exceptions import Unauthorized
 
 from configs import dify_config
@@ -135,7 +137,8 @@ def _get_account_by_openid_or_email(provider: str, user_info: OAuthUserInfo) -> 
     account: Optional[Account] = Account.get_by_openid(provider, user_info.id)
 
     if not account:
-        account = Account.query.filter_by(email=user_info.email).first()
+        with Session(db.engine) as session:
+            account = session.execute(select(Account).filter_by(email=user_info.email)).scalar_one_or_none()
 
     return account
 
@@ -145,15 +148,15 @@ def _generate_account(provider: str, user_info: OAuthUserInfo):
     account = _get_account_by_openid_or_email(provider, user_info)
 
     if account:
-        tenant = TenantService.get_join_tenants(account)
-        if not tenant:
+        tenants = TenantService.get_join_tenants(account)
+        if not tenants:
             if not FeatureService.get_system_features().is_allow_create_workspace:
                 raise WorkSpaceNotAllowedCreateError()
             else:
-                tenant = TenantService.create_tenant(f"{account.name}'s Workspace")
-                TenantService.create_tenant_member(tenant, account, role="owner")
-                account.current_tenant = tenant
-                tenant_was_created.send(tenant)
+                new_tenant = TenantService.create_tenant(f"{account.name}'s Workspace")
+                TenantService.create_tenant_member(new_tenant, account, role="owner")
+                account.current_tenant = new_tenant
+                tenant_was_created.send(new_tenant)
 
     if not account:
         if not FeatureService.get_system_features().is_allow_register:

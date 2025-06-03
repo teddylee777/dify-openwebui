@@ -50,6 +50,14 @@ const translation = {
     submit: '提交',
     skip: '船',
     imageCopied: '複製的圖片',
+    deleteApp: '刪除應用程式',
+    viewDetails: '查看詳情',
+    in: '在',
+    copied: '複製',
+    more: '更多',
+    downloadSuccess: '下載完成。',
+    downloadFailed: '下載失敗。請稍後再試。',
+    format: '格式',
   },
   placeholder: {
     input: '請輸入',
@@ -122,11 +130,15 @@ const translation = {
       Custom: '自定義',
     },
     addMoreModel: '新增更多模型',
+    settingsLink: 'Model Provider 設置',
+    capabilities: '多模式功能',
   },
   menus: {
     status: 'beta',
     explore: '探索',
     apps: '工作室',
+    appDetail: '應用詳情',
+    account: '我的帳戶',
     plugins: '外掛',
     pluginsTips: '整合第三方外掛或建立與 ChatGPT 相容的 AI 外掛。',
     datasets: '知識庫',
@@ -134,6 +146,7 @@ const translation = {
     newApp: '建立應用',
     newDataset: '建立知識庫',
     tools: '工具',
+    exploreMarketplace: '探索 Marketplace',
   },
   userProfile: {
     settings: '設定',
@@ -146,6 +159,9 @@ const translation = {
     community: '社群',
     about: '關於',
     logout: '登出',
+    support: '支持',
+    github: 'GitHub',
+    compliance: '合規',
   },
   settings: {
     accountGroup: '賬戶',
@@ -159,6 +175,7 @@ const translation = {
     dataSource: '資料來源',
     plugin: '外掛',
     apiBasedExtension: 'API 擴充套件',
+    generalGroup: '常規',
   },
   account: {
     avatar: '頭像',
@@ -172,8 +189,8 @@ const translation = {
     newPassword: '新密碼',
     notEqual: '兩個密碼不相同',
     confirmPassword: '確認密碼',
-    langGeniusAccount: 'Dify 賬號',
-    langGeniusAccountTip: '您的 Dify 賬號和相關的使用者資料。',
+    langGeniusAccount: '賬號数据',
+    langGeniusAccountTip: '您的賬號和相關的使用者資料。',
     editName: '編輯名字',
     showAppLength: '顯示 {{length}} 個應用',
     delete: '刪除帳戶',
@@ -181,7 +198,7 @@ const translation = {
     deleteConfirmTip: '請將以下內容從您的註冊電子郵件發送至 ',
     account: '帳戶',
     myAccount: '我的帳戶',
-    studio: 'Dify 工作室',
+    studio: '工作室',
     deletePrivacyLinkTip: '有關我們如何處理您的數據的更多資訊，請參閱我們的',
     deletePrivacyLink: '隱私策略。',
     deleteSuccessTip: '您的帳戶需要時間才能完成刪除。完成後，我們會給您發送電子郵件。',
@@ -194,6 +211,9 @@ const translation = {
     feedbackLabel: '告訴我們您刪除帳戶的原因？',
     feedbackPlaceholder: '自選',
     sendVerificationButton: '發送驗證碼',
+    workspaceName: '工作區名稱',
+    workspaceIcon: '工作區域圖示',
+    editWorkspaceInfo: '編輯工作區資訊',
   },
   members: {
     team: '團隊',
@@ -286,6 +306,7 @@ const translation = {
       usedUp: '試用額度已用完，請在下方新增自己的模型供應商',
       useYourModel: '當前正在使用你自己的模型供應商。',
       close: '關閉',
+      trialQuotaTip: '您的 Anthropic 試用配額將於 2025 年 3 月 11 日到期，此後將不再可用。請及時利用。',
     },
     anthropic: {
       using: '嵌入能力正在使用',
@@ -397,6 +418,12 @@ const translation = {
     editConfig: '編輯配置',
     loadBalancingInfo: '默認情況下，負載均衡使用 Round-robin 策略。如果觸發了速率限制，將應用 1 分鐘的冷卻時間。',
     loadBalancingLeastKeyWarning: '要啟用負載均衡，必須至少啟用 2 個金鑰。',
+    discoverMore: '發現更多',
+    installProvider: '安裝模型提供程式',
+    toBeConfigured: '待配置',
+    emptyProviderTitle: '未設置模型提供者',
+    configureTip: '設置 api-key 或添加要使用的模型',
+    emptyProviderTip: '請先安裝模型提供者。',
   },
   dataSource: {
     add: '新增資料來源',
@@ -440,7 +467,7 @@ const translation = {
   apiBasedExtension: {
     title: 'API 擴充套件提供了一個集中式的 API 管理，在此統一新增 API 配置後，方便在 Dify 上的各類應用中直接使用。',
     link: '瞭解如何開發您自己的 API 擴充套件。',
-    linkUrl: 'https://docs.dify.ai/v/zh-hans/guides/extension/api-based-extension',
+    linkUrl: 'https://docs.dify.ai/zh-hans/guides/tools/extensions/api-based/api-based-extension',
     add: '新增 API 擴充套件',
     selector: {
       title: 'API 擴充套件',
@@ -525,7 +552,10 @@ const translation = {
       vectorHash: '向量雜湊：',
       hitScore: '召回得分：',
     },
-    inputPlaceholder: '與 Bot 對話',
+    inputPlaceholder: '與 {{botName}} 對話',
+    thinking: '思維。。。',
+    thought: '思想',
+    resend: '重新發送',
   },
   promptEditor: {
     placeholder: '在這裡寫你的提示詞，輸入\'{\' 插入變數、輸入\'/\' 插入提示內容塊',
@@ -616,10 +646,31 @@ const translation = {
   license: {
     expiring: '將在1天內過期',
     expiring_plural: '將在 {{count}} 天后過期',
+    unlimited: '無限制',
   },
   pagination: {
     perPage: '每頁項目數',
   },
+  theme: {
+    light: '光',
+    auto: '系統',
+    dark: '黑暗',
+    theme: '主題',
+  },
+  compliance: {
+    sandboxUpgradeTooltip: '僅可用於專業或團隊計劃。',
+    soc2Type1: 'SOC 2 類型 I 報告',
+    professionalUpgradeTooltip: '僅可用於團隊計劃或更高版本。',
+    gdpr: 'GDPR DPA',
+    soc2Type2: 'SOC 2 類型 II 報告',
+    iso27001: 'ISO 27001:2022 認證',
+  },
+  imageInput: {
+    supportedFormats: '支援PNG、JPG、JPEG、WEBP和GIF',
+    browse: '瀏覽',
+    dropImageHere: '將您的圖片放在這裡，或',
+  },
+  you: '你',
 }
 
 export default translation

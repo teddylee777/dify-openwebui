@@ -50,6 +50,14 @@ const translation = {
     submit: 'Отправить',
     skip: 'Корабль',
     imageCopied: 'Скопированное изображение',
+    deleteApp: 'Удалить приложение',
+    copied: 'Скопированы',
+    in: 'в',
+    viewDetails: 'Подробнее',
+    format: 'Формат',
+    more: 'Больше',
+    downloadFailed: 'Скачивание не удалось. Пожалуйста, попробуйте еще раз позже.',
+    downloadSuccess: 'Загрузка завершена.',
   },
   errorMsg: {
     fieldRequired: '{{field}} обязательно',
@@ -126,6 +134,8 @@ const translation = {
       Custom: 'Пользовательский',
     },
     addMoreModel: 'Перейдите в настройки, чтобы добавить больше моделей',
+    capabilities: 'Мультимодальные возможности',
+    settingsLink: 'Настройки поставщика моделей',
   },
   menus: {
     status: 'бета',
@@ -138,6 +148,9 @@ const translation = {
     newApp: 'Новое приложение',
     newDataset: 'Создать знания',
     tools: 'Инструменты',
+    exploreMarketplace: 'Подробнее о Marketplace',
+    appDetail: 'Детали приложения',
+    account: 'Учетная запись',
   },
   userProfile: {
     settings: 'Настройки',
@@ -150,6 +163,9 @@ const translation = {
     community: 'Сообщество',
     about: 'О нас',
     logout: 'Выйти',
+    github: 'ГитХаб',
+    compliance: 'Соблюдение',
+    support: 'Поддержка',
   },
   settings: {
     accountGroup: 'АККАУНТ',
@@ -163,6 +179,7 @@ const translation = {
     dataSource: 'Источник данных',
     plugin: 'Плагины',
     apiBasedExtension: 'API расширение',
+    generalGroup: 'ОБЩЕЕ',
   },
   account: {
     avatar: 'Аватар',
@@ -198,6 +215,9 @@ const translation = {
     deleteLabel: 'Для подтверждения, пожалуйста, введите свой адрес электронной почты ниже',
     deleteSuccessTip: 'Вашему аккаунту требуется время, чтобы завершить удаление. Мы свяжемся с вами по электронной почте, когда все будет готово.',
     deletePrivacyLinkTip: 'Для получения дополнительной информации о том, как мы обрабатываем ваши данные, ознакомьтесь с нашим',
+    workspaceIcon: 'Иконка рабочего пространства',
+    workspaceName: 'Название рабочего пространства',
+    editWorkspaceInfo: 'Редактировать информацию о рабочем пространстве',
   },
   members: {
     team: 'Команда',
@@ -290,6 +310,7 @@ const translation = {
       usedUp: 'Пробная квота исчерпана. Добавьте собственного поставщика модели.',
       useYourModel: 'В настоящее время используется собственный поставщик модели.',
       close: 'Закрыть',
+      trialQuotaTip: 'Ваша квота на пробную версию Anthropic истечет 11.03.2025 и больше не будет доступна. Пожалуйста, используйте его вовремя.',
     },
     anthropic: {
       using: 'Возможность встраивания использует',
@@ -401,6 +422,12 @@ const translation = {
     loadBalancingLeastKeyWarning: 'Для включения балансировки нагрузки необходимо включить не менее 2 ключей.',
     loadBalancingInfo: 'По умолчанию балансировка нагрузки использует стратегию Round-robin. Если срабатывает ограничение скорости, будет применен 1-минутный период охлаждения.',
     upgradeForLoadBalancing: 'Обновите свой тарифный план, чтобы включить балансировку нагрузки.',
+    emptyProviderTitle: 'Поставщик модели не настроен',
+    toBeConfigured: 'Подлежит настройке',
+    configureTip: 'Настройте api-ключ или добавьте модель для использования',
+    emptyProviderTip: 'Сначала установите поставщик модели.',
+    discoverMore: 'Узнайте больше в',
+    installProvider: 'Установка поставщиков моделей',
   },
   dataSource: {
     add: 'Добавить источник данных',
@@ -444,7 +471,7 @@ const translation = {
   apiBasedExtension: {
     title: 'API-расширения обеспечивают централизованное управление API, упрощая настройку для удобного использования в приложениях Dify.',
     link: 'Узнайте, как разработать собственное API-расширение.',
-    linkUrl: 'https://docs.dify.ai/features/extension/api_based_extension',
+    linkUrl: 'https://docs.dify.ai/en/guides/extension/api-based-extension/README',
     add: 'Добавить API Extension',
     selector: {
       title: 'API Extension',
@@ -530,6 +557,9 @@ const translation = {
       hitScore: 'Оценка совпадения:',
     },
     inputPlaceholder: 'Поговорить с ботом',
+    thinking: 'Мыслящий...',
+    thought: 'Мысль',
+    resend: 'Переслать',
   },
   promptEditor: {
     placeholder: 'Напишите здесь свое ключевое слово подсказки, введите \'{\', чтобы вставить переменную, введите \'/\', чтобы вставить блок содержимого подсказки',
@@ -616,10 +646,31 @@ const translation = {
   license: {
     expiring: 'Срок действия истекает за один день',
     expiring_plural: 'Срок действия истекает через {{count}} дней',
+    unlimited: 'Неограниченный',
   },
   pagination: {
     perPage: 'Элементов на странице',
   },
+  theme: {
+    light: 'свет',
+    dark: 'темный',
+    theme: 'Тема',
+    auto: 'система',
+  },
+  compliance: {
+    soc2Type2: 'Отчет SOC 2 Тип II',
+    gdpr: 'GDPR DPA',
+    professionalUpgradeTooltip: 'Доступно только с командным планом или выше.',
+    iso27001: 'Сертификация ISO 27001:2022',
+    sandboxUpgradeTooltip: 'Доступно только с профессиональным или командным планом.',
+    soc2Type1: 'Отчет SOC 2 Тип I',
+  },
+  imageInput: {
+    browse: 'просмотр',
+    dropImageHere: 'Перетащите ваше изображение сюда или',
+    supportedFormats: 'Поддерживает PNG, JPG, JPEG, WEBP и GIF',
+  },
+  you: 'Ты',
 }
 
 export default translation

@@ -1,9 +1,10 @@
 import datetime
 import hashlib
+import os
 import uuid
 from typing import Any, Literal, Union
 
-from flask_login import current_user  # type: ignore
+from flask_login import current_user
 from werkzeug.exceptions import NotFound
 
 from configs import dify_config
@@ -18,7 +19,7 @@ from core.rag.extractor.extract_processor import ExtractProcessor
 from extensions.ext_database import db
 from extensions.ext_storage import storage
 from models.account import Account
-from models.enums import CreatedByRole
+from models.enums import CreatorUserRole
 from models.model import EndUser, UploadFile
 
 from .errors.file import FileTooLargeError, UnsupportedFileTypeError
@@ -38,7 +39,12 @@ class FileService:
         source_url: str = "",
     ) -> UploadFile:
         # get file extension
-        extension = filename.split(".")[-1].lower()
+        extension = os.path.splitext(filename)[1].lstrip(".").lower()
+
+        # check if filename contains invalid characters
+        if any(c in filename for c in ["/", "\\", ":", "*", "?", '"', "<", ">", "|"]):
+            raise ValueError("Filename contains invalid characters")
+
         if len(filename) > 200:
             filename = filename.split(".")[0][:200] + "." + extension
 
@@ -75,7 +81,7 @@ class FileService:
             size=file_size,
             extension=extension,
             mime_type=mimetype,
-            created_by_role=(CreatedByRole.ACCOUNT if isinstance(user, Account) else CreatedByRole.END_USER),
+            created_by_role=(CreatorUserRole.ACCOUNT if isinstance(user, Account) else CreatorUserRole.END_USER),
             created_by=user.id,
             created_at=datetime.datetime.now(datetime.UTC).replace(tzinfo=None),
             used=False,
@@ -85,6 +91,11 @@ class FileService:
 
         db.session.add(upload_file)
         db.session.commit()
+
+        if not upload_file.source_url:
+            upload_file.source_url = file_helpers.get_signed_file_url(upload_file_id=upload_file.id)
+            db.session.add(upload_file)
+            db.session.commit()
 
         return upload_file
 
@@ -122,7 +133,7 @@ class FileService:
             extension="txt",
             mime_type="text/plain",
             created_by=current_user.id,
-            created_by_role=CreatedByRole.ACCOUNT,
+            created_by_role=CreatorUserRole.ACCOUNT,
             created_at=datetime.datetime.now(datetime.UTC).replace(tzinfo=None),
             used=True,
             used_by=current_user.id,

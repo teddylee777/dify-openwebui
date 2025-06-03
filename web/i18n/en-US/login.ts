@@ -19,7 +19,7 @@ const translation = {
   setAdminAccountDesc: 'Maximum privileges for admin account, which can be used to create applications and manage LLM providers, etc.',
   createAndSignIn: 'Create and sign in',
   oneMoreStep: 'One more step',
-  createSample: 'Based on this information, we’ll create sample application for you',
+  createSample: 'Based on this information, we\'ll create sample application for you',
   invitationCode: 'Invitation Code',
   invitationCodePlaceholder: 'Your invitation code',
   interfaceLanguage: 'Interface Language',
@@ -104,6 +104,11 @@ const translation = {
   licenseLostTip: 'Failed to connect Dify license server. Please contact your administrator to continue using Dify.',
   licenseInactive: 'License Inactive',
   licenseInactiveTip: 'The Dify Enterprise license for your workspace is inactive. Please contact your administrator to continue using Dify.',
+  webapp: {
+    noLoginMethod: 'Authentication method not configured for web app',
+    noLoginMethodTip: 'Please contact the system admin to add an authentication method.',
+    disabled: 'Webapp authentication is disabled. Please contact the system admin to enable it. You can try to use the app directly.',
+  },
 }
 
 export default translation

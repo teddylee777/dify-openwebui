@@ -50,6 +50,14 @@ const translation = {
     submit: 'Envoyer',
     skip: 'Bateau',
     imageCopied: 'Image copied',
+    deleteApp: 'Supprimer l’application',
+    viewDetails: 'Voir les détails',
+    copied: 'Copied',
+    in: 'dans',
+    format: 'Format',
+    downloadFailed: 'Échec du téléchargement. Veuillez réessayer plus tard.',
+    more: 'Plus',
+    downloadSuccess: 'Téléchargement terminé.',
   },
   placeholder: {
     input: 'Veuillez entrer',
@@ -122,6 +130,8 @@ const translation = {
       Custom: 'Personnalisé',
     },
     addMoreModel: 'Allez dans les paramètres pour ajouter plus de modèles',
+    capabilities: 'Capacités multimodales',
+    settingsLink: 'Paramètres du fournisseur de modèles',
   },
   menus: {
     status: 'bêta',
@@ -134,6 +144,9 @@ const translation = {
     newApp: 'Nouvelle Application',
     newDataset: 'Créer des Connaissances',
     tools: 'Outils',
+    exploreMarketplace: 'Explorer Marketplace',
+    appDetail: 'Détails de l\'application',
+    account: 'Compte',
   },
   userProfile: {
     settings: 'Paramètres',
@@ -146,6 +159,9 @@ const translation = {
     community: 'Communauté',
     about: 'À propos',
     logout: 'Se déconnecter',
+    support: 'Soutien',
+    github: 'GitHub',
+    compliance: 'Conformité',
   },
   settings: {
     accountGroup: 'COMPTE',
@@ -159,6 +175,7 @@ const translation = {
     dataSource: 'Source de Données',
     plugin: 'Plugins',
     apiBasedExtension: 'Extension API',
+    generalGroup: 'GÉNÉRALITÉS',
   },
   account: {
     avatar: 'Avatar',
@@ -194,6 +211,9 @@ const translation = {
     feedbackTitle: 'Rétroaction',
     feedbackLabel: 'Dites-nous pourquoi vous avez supprimé votre compte ?',
     feedbackPlaceholder: 'Optionnel',
+    workspaceName: 'Nom de l\'espace de travail',
+    workspaceIcon: 'Icône de l\'espace de travail',
+    editWorkspaceInfo: 'Modifier les informations de l\'espace de travail',
   },
   members: {
     team: 'Équipe',
@@ -286,6 +306,7 @@ const translation = {
       usedUp: 'Quota d\'essai épuisé. Ajoutez votre propre fournisseur de modèle.',
       useYourModel: 'Utilise actuellement son propre fournisseur de modèle.',
       close: 'Fermer',
+      trialQuotaTip: 'Votre quota d’essai Anthropic expirera le 11/03/2025 et ne sera plus disponible par la suite. Veuillez l’utiliser à temps.',
     },
     anthropic: {
       using: 'La capacité d\'embedding est utilisée',
@@ -397,6 +418,12 @@ const translation = {
     loadBalancingDescription: 'Réduisez la pression grâce à plusieurs ensembles d’informations d’identification.',
     providerManaged: 'Géré par le fournisseur',
     upgradeForLoadBalancing: 'Mettez à niveau votre plan pour activer l’équilibrage de charge.',
+    emptyProviderTitle: 'Le fournisseur de modèles n’est pas configuré',
+    toBeConfigured: 'À configurer',
+    configureTip: 'Configurer api-key ou ajouter un modèle à utiliser',
+    installProvider: 'Installer des fournisseurs de modèles',
+    discoverMore: 'Découvrez-en plus dans',
+    emptyProviderTip: 'Veuillez d’abord installer un fournisseur de modèles.',
   },
   dataSource: {
     add: 'Ajouter une source de données',
@@ -525,7 +552,10 @@ const translation = {
       vectorHash: 'Hachage vectoriel:',
       hitScore: 'Score de Récupération:',
     },
-    inputPlaceholder: 'Parler au bot',
+    inputPlaceholder: 'Parler au {{botName}}',
+    thinking: 'Pensée...',
+    thought: 'Pensée',
+    resend: 'Renvoyer',
   },
   promptEditor: {
     placeholder: 'Écrivez votre mot d\'invite ici, entrez \'{\' pour insérer une variable, entrez \'/\' pour insérer un bloc de contenu d\'invite',
@@ -616,10 +646,31 @@ const translation = {
   license: {
     expiring: 'Expirant dans un jour',
     expiring_plural: 'Expirant dans {{count}} jours',
+    unlimited: 'Illimité',
   },
   pagination: {
     perPage: 'Articles par page',
   },
+  theme: {
+    auto: 'système',
+    light: 'lumière',
+    dark: 'sombre',
+    theme: 'Thème',
+  },
+  compliance: {
+    soc2Type1: 'Rapport SOC 2 Type I',
+    iso27001: 'Certification ISO 27001:2022',
+    professionalUpgradeTooltip: 'Disponible uniquement avec un plan Équipe ou supérieur.',
+    gdpr: 'RGPD DPA',
+    soc2Type2: 'Rapport SOC 2 Type II',
+    sandboxUpgradeTooltip: 'Disponible uniquement avec un plan Professionnel ou Équipe.',
+  },
+  imageInput: {
+    browse: 'naviguer',
+    dropImageHere: 'Déposez votre image ici, ou',
+    supportedFormats: 'Prend en charge PNG, JPG, JPEG, WEBP et GIF',
+  },
+  you: 'Vous',
 }
 
 export default translation

@@ -4,9 +4,9 @@ from typing import Any, Literal, Union
 from core.file import File
 from core.variables import ArrayFileSegment, ArrayNumberSegment, ArrayStringSegment
 from core.workflow.entities.node_entities import NodeRunResult
+from core.workflow.entities.workflow_node_execution import WorkflowNodeExecutionStatus
 from core.workflow.nodes.base import BaseNode
 from core.workflow.nodes.enums import NodeType
-from models.workflow import WorkflowNodeExecutionStatus
 
 from .entities import ListOperatorNodeData
 from .exc import InvalidConditionError, InvalidFilterValueError, InvalidKeyError, ListOperatorError
@@ -149,7 +149,10 @@ class ListOperatorNode(BaseNode[ListOperatorNodeData]):
     def _extract_slice(
         self, variable: Union[ArrayFileSegment, ArrayNumberSegment, ArrayStringSegment]
     ) -> Union[ArrayFileSegment, ArrayNumberSegment, ArrayStringSegment]:
-        value = int(self.graph_runtime_state.variable_pool.convert_template(self.node_data.extract_by.serial).text) - 1
+        value = int(self.graph_runtime_state.variable_pool.convert_template(self.node_data.extract_by.serial).text)
+        if value < 1:
+            raise ValueError(f"Invalid serial index: must be >= 1, got {value}")
+        value -= 1
         if len(variable.value) > int(value):
             result = variable.value[value]
         else:
